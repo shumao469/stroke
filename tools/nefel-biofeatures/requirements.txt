@@ -1,0 +1,6 @@
+numpy>=1.23
+pandas>=2.0
+scipy>=1.10
+scikit-image>=0.21
+opencv-python>=4.8
+matplotlib>=3.7
