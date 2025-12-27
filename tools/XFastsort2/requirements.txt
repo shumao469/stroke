@@ -1,0 +1,7 @@
+numpy>=1.23
+scipy>=1.10
+pandas>=1.4
+scikit-learn>=1.2
+matplotlib>=3.7
+tqdm>=4.66
+Pillow>=10.0
