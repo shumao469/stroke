@@ -1,9 +1,9 @@
-# dbs-pointnetpp
+# DBS-pointnet++
 
 ![PointNet++ framework](assets/pointnet_framework.png)
 ![DBS point cloud pipeline](assets/pointnet_pipeline.png)
 
-PointNet++-based 3D point cloud deep learning codebase for **personalized deep brain stimulation (DBS) efficacy prediction** in Parkinson disease (PD).
+PointNet++-based 3D point cloud deep learning codebase for **personalized deep brain stimulation (DBS) efficacy prediction** in Parkinson's disease (PD).
 
 This repository provides:
 - A clean, reusable **PyTorch PointNet++** implementation (set abstraction + feature projection)
