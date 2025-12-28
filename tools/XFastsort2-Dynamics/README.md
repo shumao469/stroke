@@ -61,18 +61,6 @@ where `fs` is the **feature sampling rate (bins per second)**.
 
 ---
 
-## How to choose pre / stim / post
-
-After alignment (`stim_onset=0 s`), a typical TI session:
-
-- pre:  [-60, 0) seconds
-- stim: [0, 180) seconds (3 min)
-- post: [180, 780) seconds (10 min post)
-
-Adjust durations to match your protocol.
-
----
-
 ## Outputs
 
 For each run, `outdir` contains:
