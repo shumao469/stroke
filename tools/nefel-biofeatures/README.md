@@ -13,7 +13,7 @@ This repository is a GitHub-ready packaging of the original notebook:
 Section-aligned analyses (matching the notebook structure):
 
 - **Section 1:** iNOS / Arg analysis
-- **Section 2:** Iba1 analysis (Day 1)
+- **Section 2:** Iba1 analysis
 - **Section 3:** Claudin-5 analysis
 - **Section 4:** CD31 analysis
 - **Section 5:** Synapse analysis
