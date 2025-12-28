@@ -2,12 +2,7 @@
 
 A lightweight, **paper-oriented** toolkit for extracting quantitative biomarkers from
 histology / immunofluorescence (IF) / immunohistochemistry (IHC) images.
-
-This repository is a GitHub-ready packaging of the original notebook:
-`Biofeature_extraction_NEFEL.ipynb`.
-
 ---
-
 ## What you get
 
 Section-aligned analyses (matching the notebook structure):
