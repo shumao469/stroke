@@ -1,4 +1,4 @@
-# DBS-pointnet++
+# DBS-Pointnet++
 
 ![PointNet++ framework](assets/pointnet_framework.png)
 ![DBS point cloud pipeline](assets/pointnet_pipeline.png)
