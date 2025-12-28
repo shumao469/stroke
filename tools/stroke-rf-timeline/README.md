@@ -7,7 +7,7 @@ Random forest regression model for **clinical time-series outcome prediction** i
 targeting **FMA improvement** (ΔFMA = post-FMA − pre-FMA).
 
 This package implements the modeling protocol:
-- Missing values: **MICE-style multiple imputation** (IterativeImputer, 5 iterations)
+- **MICE-style multiple imputation** (IterativeImputer, 5 iterations)
 - Normalization: **z-score** on numeric predictors (including age and stroke onset months)
 - Predictors: age, stroke duration (months), pre-FMA, pre-MBI, stroke type (ischemic/hemorrhagic)
 - Model: RandomForestRegressor + **5-fold CV GridSearch**
@@ -97,10 +97,11 @@ Outputs:
 If you find our work useful, we would appreciate it if you could cite our paper.
 
 ```bibtex
-@article{Xu2025high,
+@article{Xu2025_NEFEL_ISTBI_Fudan_University,
   title={Long-Term Brain–Computer Interface Functional Electrical Stimulation Enhances Neuroplasticity and Functional Recovery in Elderly Stroke: A 4.5-Year Longitudinal Study Integrating Electroencephalography Biomarkers and Clinical Assessments},
   author={Shugeng Chen and Na Xie and Yurui Tang and Yanyun Ji and Zhijie He and Yuchun Wang and Xude Huang and Jianghong Fu and Minyan Ge and Qiang Liu and Mingfen Li and Qinqin Xiao and Ying Xu and Jing Wang and Jie Jia and Shumao Xu},
   journal={Research},
+  link={https://spj.science.org/doi/full/10.34133/research.0984}
   year={2025}
 }
 ```
