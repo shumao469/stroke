@@ -1,4 +1,4 @@
-# rTMS-EEG closed loop control
+# Magnetic NeuroRing rTMS-EEG closed loop control
 
 Python implementation of **task or rest-state rTMS–EEG** analysis utilities, ported from MATLAB/EEGLAB scripts:
 
