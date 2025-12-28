@@ -13,7 +13,7 @@ Designed for easy GitHub sharing and reproducible analysis.
 If you find this code useful, please cite:
 
 ```bibtex
-@article{NEFEL2025@ISTBI_Fudan_Magnetic NeuroRing: A portable adaptive brain-computer interface for real-time transcranial magnetic stimulation in post-stroke motor rehabilitation
+@article{NEFEL2025@ISTBI_Fudan Magnetic NeuroRing: A portable adaptive brain-computer interface for real-time transcranial magnetic stimulation in post-stroke motor rehabilitation
   journal={npj Biomedical Innovations},
   year={2025},
   doi={10.1038/s44385-025-00055-5}
