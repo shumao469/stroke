@@ -1,6 +1,6 @@
-# rtms-eeg-closedloop
+# rTMS-EEG-closed_loop_control
 
-Python implementation of **task-state rTMS–EEG** analysis utilities, ported from MATLAB/EEGLAB scripts:
+Python implementation of **task or rest-state rTMS–EEG** analysis utilities, ported from MATLAB/EEGLAB scripts:
 
 - `raw.m` — TXT → MAT + trigger cleanup  
 - `eeglabtask.m` — filter → reref → epoch → baseline → ERSP per channel  
@@ -13,7 +13,7 @@ Designed for easy GitHub sharing and reproducible analysis.
 If you find this code useful, please cite:
 
 ```bibtex
-@article{xu2025magnetic,
+@article{NEFEL2025@ISTBI_Fudan_Magnetic NeuroRing: A portable adaptive brain-computer interface for real-time transcranial magnetic stimulation in post-stroke motor rehabilitation
   journal={npj Biomedical Innovations},
   year={2025},
   doi={10.1038/s44385-025-00055-5}
