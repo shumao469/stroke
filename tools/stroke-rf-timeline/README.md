@@ -1,4 +1,4 @@
-# stroke-rf-timeline
+# Stroke_Random_forest_regression_prediction_timeline
 
 ![EEG setup](assets/eeg_setup.png)
 ![Random forest results](assets/rf_results.png)
