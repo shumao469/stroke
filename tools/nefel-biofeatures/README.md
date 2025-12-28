@@ -1,6 +1,6 @@
 # NEFEL Biofeature Extraction
 
-A lightweight, **paper-oriented** toolkit for extracting quantitative biomarkers from
+A lightweight toolkit for extracting quantitative biomarkers from
 histology / immunofluorescence (IF) / immunohistochemistry (IHC) images.
 ---
 ## What you get
