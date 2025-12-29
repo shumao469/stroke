@@ -3,7 +3,7 @@
 A reproducible pipeline to analyze **ocular discharge metabolomics** for **stroke phenotyping/prediction** with
 Science-style figures (taxonomy shift, networks, and prediction-core panels).
 
-> ⚠️ With **n=4 per group**, any model metrics are **methods demonstration only**.
+
 
 ## Functional modules (what this repo does)
 
@@ -66,4 +66,4 @@ Sample IDs expected: `NC1..`, `HS1..`, `ZS1..`, `QC1..`
 - True external validation should be an **independent center** or **independent time window** cohort.
 
 ## License
-MIT
+Fudan University
