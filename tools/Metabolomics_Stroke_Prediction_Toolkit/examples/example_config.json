@@ -1,0 +1,19 @@
+{
+  "excel_path": "HS_related_all_tables.xlsx",
+  "out_dir": "outputs",
+  "taxonomy": {
+    "p_thr": 0.05,
+    "vip_thr": 1.0,
+    "top_subclass": 20
+  },
+  "network": {
+    "top_n": 150,
+    "rank_by": "VIP",
+    "target_edges": 650,
+    "rho_min": 0.7,
+    "rho_max": 0.88
+  },
+  "predict_demo": {
+    "top_k": 30
+  }
+}
