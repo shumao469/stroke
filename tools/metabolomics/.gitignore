@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+# Data (do not commit raw metabolomics matrices)
+data/
+*.xlsx
+*.xls
+*.csv
+*.tsv
+
+# Figures (optional, usually keep out of repo)
+*.png
+*.pdf
+QC_Figures/
+out_*/
