@@ -110,4 +110,4 @@ If you find our work useful, we would appreciate it if you could cite our paper.
 
 ## Contact
 
-If you have any questions, please feel free to contact 📩 shumaoxu@fudan.edu.cn
+If you have any questions, please feel free to contact 📩 shumaoxu@fudan.edu.cn; tonychshug@126.com
