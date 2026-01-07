@@ -5,3 +5,4 @@ scikit-learn>=1.2
 matplotlib>=3.7
 tqdm>=4.66
 hmmlearn>=0.3.0
+streamlit pandas numpy scipy scikit-learn matplotlib seaborn hmmlearn umap-learn
