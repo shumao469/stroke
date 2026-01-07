@@ -2,153 +2,160 @@
 
 Official PyTorch implementation of a **PointNet++-based 3D point-cloud framework** for **personalized DBS efficacy prediction** in Parkinson’s disease (PD).
 
-This framework integrates:
-- **Patient-specific neuroanatomy** derived from MRI/CT (surfaces / labels)
-- **Lead-DBS / FEM electric-field simulation outputs** (e-field magnitude and vectors)
-- **Geometric deep learning** (PointNet++ with multi-scale set abstraction)
+This framework integrates patient-specific neuroanatomy and biophysical electric-field simulations into unified point clouds, enabling the model to directly learn spatial field–tissue interaction patterns for predicting clinical improvement (e.g., **MDS-UPDRS III**).
 
-The model predicts clinical motor outcome (e.g., **MDS-UPDRS III improvement**) and supports multi-center generalization evaluation (e.g., **Leave-Center-Out**).
-
-> Note: The repository provides a *research pipeline*. For clinical use, additional validation, governance, and regulatory processes are required.
+> **Compliance note**: The evaluation utilities are designed to support TRIPOD+AI-style reporting (center-level split, calibration, decision curve analysis). This repository is for research use and does not constitute a clinical decision system.
 
 ---
 
-## Highlights
+## Key Ideas
 
-- **End-to-end demo pipeline**: data preparation → point cloud fusion → training → evaluation  
-- **Strict center-level split** (Leave-Center-Out) for external generalization testing  
-- **Calibration + Decision Curve Analysis (DCA)** for clinical utility assessment  
-- **Reproducibility utilities** (seed locking for NumPy/PyTorch/CPU/GPU)
+- **Geometry-preserving learning**: rather than compressing electric-field patterns into scalar features (e.g., VTA), we keep **high-dimensional spatial fidelity**.
+- **Unified patient representation**: fuse **anatomy + tissue labels + FEM electric field** into a single **3D point cloud** per patient.
+- **Multi-center generalization**: support **Leave-Center-Out** validation to reduce site-specific overfitting.
+- **Clinical utility**: provide **calibration** (Brier score/curves) and **Decision Curve Analysis (DCA)**.
 
 ---
 
-## Repository Layout
+## Repository Structure
 
-Typical folder structure:
+Typical files and folders (may vary depending on your local setup):
 
 - `dbs_integrated_pipeline.py`  
-  Main entry: runs the integrated “digital-twin” workflow (demo mode supported).
+  Main entry point. Runs an end-to-end pipeline from (mock or real) Lead-DBS outputs → point-cloud fusion → training → external validation.
 
-- `dbs_pipeline_demo.py`  
-  Lightweight demo script (quick sanity checks / example usage).
+- `dbs_pointnetpp_model.py` (or similar)  
+  PointNet++ backbone implementation and heads (regression / optional classification).
 
-- `dbs_external_validation.py`  
-  External validation utilities (Leave-Center-Out, calibration, DCA).
+- `dbs_external_validation.py` (or similar)  
+  External validation suite: center split, metrics, calibration, DCA.
 
-- `mock_dbs_data/`  
-  Synthetic data for demonstration/testing (when MATLAB/Lead-DBS is unavailable).
+- `docs/`  
+  - `DATA_SPEC.md`: strict `.npz/.npy` input/output specs (recommended)
+  - other notes
 
-- `leaddbs_output/`  
-  Placeholder directory for Lead-DBS outputs (MATLAB pipeline results).
+- `processed_pcd/` (generated)  
+  Point cloud `.npz` files per patient (**should not be committed to Git**).
 
-- `processed_pcd/`  
-  Output directory for fused point clouds (`.npz`) and intermediate artifacts.
-
-See `docs/DATA_SPEC.md` for strict input/output format definitions.
+> **Important**: generated artifacts such as `processed_pcd/`, `runs/`, `outputs/`, and `.npz` datasets should be ignored via `.gitignore`.
 
 ---
 
 ## Installation
 
+### 1) Create environment (recommended)
+
 ```bash
-# recommended: create a clean env
 python -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-# .venv\\Scripts\\activate  # Windows
+# Windows:
+# .venv\Scripts\activate
+# macOS/Linux:
+# source .venv/bin/activate
+```
 
+### 2) Install dependencies
+
+```bash
 pip install -r requirements.txt
-Requirements (typical)
+```
 
-Python 3.8+
+Typical requirements:
+- Python 3.8+
+- PyTorch (GPU strongly recommended)
+- numpy, scipy
+- scikit-learn (metrics, calibration)
+- tqdm, matplotlib
 
-PyTorch (GPU recommended)
+Optional:
+- MATLAB Engine API for Python (only if you call real Lead-DBS via MATLAB)
 
-scikit-learn
+---
 
-numpy, scipy
+## Quick Start (Demo Mode)
 
-tqdm, matplotlib
+Run the integrated pipeline:
 
-(Optional)
-
-MATLAB Engine API for Python (only needed if you run real Lead-DBS via MATLAB)
-
-Quick Start
-Run the integrated pipeline (demo mode supported):
-
-bash
-复制代码
+```bash
 python dbs_integrated_pipeline.py
-Expected console flow (example):
+```
 
-Phase 1: generate multi-center mock data (or call MATLAB Lead-DBS if available)
+If MATLAB / Lead-DBS is not available, the pipeline may switch to **simulation mode** (synthetic demo data) for reproducibility testing and tutorial use.
 
-Phase 2: convert outputs to unified point clouds (.npz)
+Expected workflow (conceptually):
+1) **(Optional) Lead-DBS execution** (MATLAB): coregistration → normalization → electrode reconstruction → FEM E-field simulation  
+2) **ETL & Fusion**: convert anatomy/mesh/voxels + FEM nodes to a unified point cloud `.npz`  
+3) **Study design**: Leave-Center-Out split  
+4) **Training**: PointNet++ with regression (+ optional classification)  
+5) **External validation**: discrimination + calibration + DCA
 
-Phase 3: Leave-Center-Out split
+---
 
-Phase 4: train PointNet++ model
+## Data Format (`.npz`) — Point Cloud Sample
 
-Phase 5: external validation (discrimination + calibration + DCA)
+Each patient corresponds to a single `.npz` file.
 
-Outputs are written under:
+Recommended required keys:
+- `points`: `float32`, shape `(N, C)`  
+  Example channel layout (recommended):
+  - `0:3`  → XYZ coordinates (mm, same coordinate system as fusion output)
+  - `3`    → tissue / structure ID (int-like stored as float ok)
+  - `4`    → E-field magnitude
+  - `5:8`  → E-field vector components (Ex, Ey, Ez)
+  - `8:11` → optional geometric / normalized features (normals, distances, etc.)
 
-processed_pcd/ (point clouds)
+- `y_reg`: float (scalar)  
+  Continuous outcome (e.g., ΔMDS-UPDRS III)
 
-runs/ or outputs/ (depending on your config)
+Optional keys:
+- `y_cls`: int {0,1}  
+  Binary responder label (threshold defined in your study)
 
-Data Format: Point Cloud .npz
-Each patient sample is stored as a single .npz file.
+- `center`: string  
+  Center/site ID used for Leave-Center-Out splitting
 
-Required keys (recommended strict spec):
+**Strict specs and file conventions are documented in**: `docs/DATA_SPEC.md`.
 
-points: (N, C) float32
+---
 
-xyz coordinates + anatomical labels + e-field features, etc.
+## Multi-Center Validation (Leave-Center-Out)
 
-y_reg: float (or shape (1,))
+A recommended external validation design:
+- Train: Center A + Center B
+- Test (external): Center C
 
-continuous clinical outcome (e.g., ΔMDS-UPDRS III)
+This simulates deployment to a previously unseen hospital and reduces center-leakage.
 
-y_cls: int {0,1}
+Typical metrics:
+- Regression: R², MAE, RMSE  
+- Classification (if enabled): AUC  
+- Calibration: Brier score + calibration curve  
+- Clinical utility: Decision Curve Analysis (DCA)
 
-responder label (optional; depends on your study definition)
+---
 
-center: str
+## Reproducibility
 
-center/site ID for Leave-Center-Out split
+The pipeline includes deterministic/reproducibility utilities (seed locking across Python/NumPy/PyTorch; optional CUDA determinism). Exact reproducibility may still vary across GPU drivers and CUDA versions.
 
-Please refer to: docs/DATA_SPEC.md for the full strict schema and conventions.
+---
 
-Validation (Multi-center)
-This repo supports Leave-Center-Out evaluation:
+## Citation
 
-Train: Center A + Center B
+If you use this code, please cite:
 
-External validation: Center C
-
-Metrics (typical):
-
-Regression: R² / MAE / RMSE
-
-Classification (if enabled): AUC
-
-Calibration: Brier score + calibration curve
-
-Clinical utility: Decision Curve Analysis (DCA)
-
-Citation
-If you find this code useful, please cite:
-
-bibtex
-复制代码
+```bibtex
 @article{Xu2026high,
   title={PointNet++-based 3D point cloud deep learning for personalized deep brain stimulation efficacy prediction in Parkinson disease},
   author={Yinghao Zhu and Ru Wang and Minyan Ge and Yuchun Wang and Zihao Liu and Gongyi Zhu and Shugeng Chen and Bo Shen and Yimin Sun and Fengtao Liu and Jue Zhao and Narasimha M. Beeraka and Virak Sorn and Haiyin Wang and Vladimir N. Nikolenko and Jianjun Wu and Shumao Xu},
   year={2026},
   copyright={AAAS}
 }
-Contact
-Shumao Xu, Ph.D.
-Institute of Science and Technology for Brain-inspired Intelligence, Fudan University
+```
+
+---
+
+## Contact
+
+Shumao Xu, Ph.D.  
+Institute of Science and Technology for Brain-inspired Intelligence, Fudan University  
 📩 shumaoxu@fudan.edu.cn
