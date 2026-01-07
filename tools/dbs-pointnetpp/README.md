@@ -4,11 +4,11 @@ Official PyTorch implementation of a **PointNet++-based 3D point-cloud framework
 
 This framework integrates patient-specific neuroanatomy and biophysical electric-field simulations into unified point clouds, enabling the model to directly learn spatial field–tissue interaction patterns for predicting clinical improvement (e.g., **MDS-UPDRS III**).
 
-> **Compliance note**: The evaluation utilities are designed to support TRIPOD+AI-style reporting (center-level split, calibration, decision curve analysis). This repository is for research use and does not constitute a clinical decision system.
+> **Compliance note**: The evaluation utilities are designed to support TRIPOD+AI-style reporting (center-level split, calibration, decision curve analysis). 
 
 ---
 
-## Key Ideas
+## Highlight
 
 - **Geometry-preserving learning**: rather than compressing electric-field patterns into scalar features (e.g., VTA), we keep **high-dimensional spatial fidelity**.
 - **Unified patient representation**: fuse **anatomy + tissue labels + FEM electric field** into a single **3D point cloud** per patient.
