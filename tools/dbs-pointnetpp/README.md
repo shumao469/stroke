@@ -1,181 +1,154 @@
-PointNet++ for Personalized Deep Brain Stimulation (DBS) Efficacy Prediction
+# PointNet++ for Personalized Deep Brain Stimulation (DBS) Efficacy Prediction
 
-This repository contains the official PyTorch implementation of the PointNet++ based 3D point cloud deep learning framework for predicting Deep Brain Stimulation (DBS) outcomes in Parkinson's disease (PD).
+Official PyTorch implementation of a **PointNet++-based 3D point-cloud framework** for **personalized DBS efficacy prediction** in Parkinson’s disease (PD).
 
-By integrating Lead-DBS biophysical simulations with geometric deep learning, this framework directly processes patient-specific neuroanatomy and electric field distributions to predict clinical motor improvements (MDS-UPDRS III).
+This framework integrates:
+- **Patient-specific neuroanatomy** derived from MRI/CT (surfaces / labels)
+- **Lead-DBS / FEM electric-field simulation outputs** (e-field magnitude and vectors)
+- **Geometric deep learning** (PointNet++ with multi-scale set abstraction)
 
-Compliance: This codebase adheres to the TRIPOD+AI 2024 Reporting Guidelines, featuring strict data leakage control (Leave-Center-Out), calibration analysis, and decision curve analysis (DCA).
+The model predicts clinical motor outcome (e.g., **MDS-UPDRS III improvement**) and supports multi-center generalization evaluation (e.g., **Leave-Center-Out**).
 
-📂 Key Components & Pipelines
+> Note: The repository provides a *research pipeline*. For clinical use, additional validation, governance, and regulatory processes are required.
 
-This repository is structured around two core workflows implemented in dbs_integrated_pipeline.py.
+---
 
-1. 🚀 The Integrated Pipeline (dbs_integrated_pipeline.py)
+## Highlights
 
-This is the main entry point that automates the "End-to-End" process: from raw neuroimaging data processing to AI model training. It serves as a bridge between clinical data processing (MATLAB) and deep learning (Python).
+- **End-to-end demo pipeline**: data preparation → point cloud fusion → training → evaluation  
+- **Strict center-level split** (Leave-Center-Out) for external generalization testing  
+- **Calibration + Decision Curve Analysis (DCA)** for clinical utility assessment  
+- **Reproducibility utilities** (seed locking for NumPy/PyTorch/CPU/GPU)
 
-Workflow Stages:
+---
 
-Lead-DBS Interface (MATLAB/Mock): * Invokes the MATLAB engine to run the Lead-DBS pipeline (Coregistration -> Normalization -> PaCER Electrode Reconstruction -> FEM Electric Field Simulation).
+## Repository Layout
 
-Note: If MATLAB is not detected, it automatically switches to Simulation Mode, generating synthetic patient data for demonstration purposes.
+Typical folder structure:
 
-ETL & Point Cloud Fusion:
+- `dbs_integrated_pipeline.py`  
+  Main entry: runs the integrated “digital-twin” workflow (demo mode supported).
 
-Converts Lead-DBS outputs (Voxels/Meshes) into unified 3D Point Clouds (.npz).
+- `dbs_pipeline_demo.py`  
+  Lightweight demo script (quick sanity checks / example usage).
 
-Fusion Strategy: Merges anatomical coordinates, tissue labels (STN/GPi), and electric field vectors ($E, E_x, E_y, E_z$) into a dense point set (~227k points/patient, downsampled for training).
+- `dbs_external_validation.py`  
+  External validation utilities (Leave-Center-Out, calibration, DCA).
 
-PointNet++ Model Training:
+- `mock_dbs_data/`  
+  Synthetic data for demonstration/testing (when MATLAB/Lead-DBS is unavailable).
 
-Initializes the fixed PointNet++ architecture (specifically tuned to handle 11-channel inputs: 3 coords + 8 features).
+- `leaddbs_output/`  
+  Placeholder directory for Lead-DBS outputs (MATLAB pipeline results).
 
-Trains on the internal development set using a multi-task loss (Regression + Classification).
+- `processed_pcd/`  
+  Output directory for fused point clouds (`.npz`) and intermediate artifacts.
 
-2. 🛡️ The External Validation Pipeline (TRIPOD-AI Compliant)
+See `docs/DATA_SPEC.md` for strict input/output format definitions.
 
-Implemented as Phase 5 within the integrated script, this module rigorously evaluates model generalizability and clinical utility, strictly following TRIPOD-AI standards.
+---
 
-Key Validation Features:
+## Installation
 
-Leave-Center-Out Cross-Validation (Data Leakage Control): * The script automatically identifies Center_ID tags in the data.
+```bash
+# recommended: create a clean env
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\\Scripts\\activate  # Windows
 
-Training: Performed strictly on Center A and Center B.
-
-Validation: Performed strictly on Center C (External).
-
-Benefit: This simulates real-world deployment where the model sees patients from a completely new hospital, preventing "site-specific" overfitting.
-
-Model Calibration: * Calculates the Brier Score and generates Calibration Curves.
-
-Ensures that a predicted 80% success probability truly corresponds to an 80% real-world success rate.
-
-Decision Curve Analysis (DCA):
-
-Computes the Net Benefit across different probability thresholds.
-
-Answers the clinical question: "Does using this AI model lead to better patient outcomes compared to treating everyone or treating no one?"
-
-Reproducibility:
-
-Includes a set_reproducibility() function that locks random seeds (CPU, GPU, Numpy) to ensure exact replication of results.
-
-🛠️ Installation
-
-# Clone the repository
-git clone [https://github.com/yourlab/dbs-pointnetpp.git](https://github.com/yourlab/dbs-pointnetpp.git)
-cd dbs-pointnetpp
-
-# Install dependencies
 pip install -r requirements.txt
-
-
-Requirements:
+Requirements (typical)
 
 Python 3.8+
 
-PyTorch 1.12+
+PyTorch (GPU recommended)
 
-scikit-learn (for metrics and calibration)
+scikit-learn
 
-tqdm
+numpy, scipy
 
-(Optional) MATLAB Engine API for Python (for real Lead-DBS execution)
+tqdm, matplotlib
 
-🏃 Usage
+(Optional)
 
-Running the Full Pipeline
+MATLAB Engine API for Python (only needed if you run real Lead-DBS via MATLAB)
 
-To run the complete simulation—including data generation, training, and TRIPOD-AI validation report—execute:
+Quick Start
+Run the integrated pipeline (demo mode supported):
 
+bash
+复制代码
 python dbs_integrated_pipeline.py
+Expected console flow (example):
 
+Phase 1: generate multi-center mock data (or call MATLAB Lead-DBS if available)
 
-Expected Output:
-The script acts as a "Digital Twin" demo, printing progress for each phase:
+Phase 2: convert outputs to unified point clouds (.npz)
 
-======== Phase 1: Multi-Center Simulation (Lead-DBS) ========
-🏥 Generating Data for Center_A...
-🏥 Generating Data for Center_C... (External)
+Phase 3: Leave-Center-Out split
 
-======== Phase 3: Study Design (Leave-Center-Out) ========
-📚 Internal Training Set (Center A+B): 8 samples
-🛡️ External Validation Set (Center C): 4 samples
-⚠️ Status: Strict Separation Enforced (No Data Leakage)
+Phase 4: train PointNet++ model
 
-======== Phase 5: External Validation (TRIPOD-AI Report) ========
-📝 [Discrimination] External AUC: 0.8750
-📈 [Calibration] Brier Score: 0.1240 (Ideal: 0.0)
-⚖️ [Decision Curve Analysis]
-   Threshold | Net Benefit (Model)
-   0.40      | 0.3500
+Phase 5: external validation (discrimination + calibration + DCA)
 
+Outputs are written under:
 
-📊 Data Format (.npz)
+processed_pcd/ (point clouds)
 
-The pipeline generates/expects .npz files for each patient containing:
+runs/ or outputs/ (depending on your config)
 
-Key
+Data Format: Point Cloud .npz
+Each patient sample is stored as a single .npz file.
 
-Shape
+Required keys (recommended strict spec):
 
-Description
+points: (N, C) float32
 
-points
+xyz coordinates + anatomical labels + e-field features, etc.
 
-(N, 11)
+y_reg: float (or shape (1,))
 
-Cols 0-2: XYZ coords
+continuous clinical outcome (e.g., ΔMDS-UPDRS III)
 
+y_cls: int {0,1}
 
+responder label (optional; depends on your study definition)
 
-Cols 3: Tissue ID (0=STN, 1=GPi...)
+center: str
 
+center/site ID for Leave-Center-Out split
 
+Please refer to: docs/DATA_SPEC.md for the full strict schema and conventions.
 
-Cols 4: E-Field Magnitude
+Validation (Multi-center)
+This repo supports Leave-Center-Out evaluation:
 
+Train: Center A + Center B
 
+External validation: Center C
 
-Cols 5-7: E-Field Vector ($V_x, V_y, V_z$)
+Metrics (typical):
 
+Regression: R² / MAE / RMSE
 
+Classification (if enabled): AUC
 
-Cols 8-10: Normalized Geometry
+Calibration: Brier score + calibration curve
 
-y_reg
+Clinical utility: Decision Curve Analysis (DCA)
 
-Scalar
+Citation
+If you find this code useful, please cite:
 
-MDS-UPDRS III improvement score (0-100)
-
-y_cls
-
-0 or 1
-
-Responder binary label (Threshold > 40%)
-
-center
-
-String
-
-Hospital/Center ID (e.g., "Center_C") for validation splitting
-
-📝 Citation
-
-If you use this code or the TRIPOD-AI validation framework, please cite:
-
+bibtex
+复制代码
 @article{Xu2026high,
   title={PointNet++-based 3D point cloud deep learning for personalized deep brain stimulation efficacy prediction in Parkinson disease},
-  author={Xu, Shumao and et al.},
-  journal={},
-  year={2026}
+  author={Yinghao Zhu and Ru Wang and Minyan Ge and Yuchun Wang and Zihao Liu and Gongyi Zhu and Shugeng Chen and Bo Shen and Yimin Sun and Fengtao Liu and Jue Zhao and Narasimha M. Beeraka and Virak Sorn and Haiyin Wang and Vladimir N. Nikolenko and Jianjun Wu and Shumao Xu},
+  year={2026},
+  copyright={AAAS}
 }
-
-
-📧 Contact
-
-For technical questions regarding the pipeline integration:
-Shumao Xu, Ph.D. Institute of Science and Technology for Brain-inspired Intelligence, Fudan University
-
-Email: shumaoxu@fudan.edu.cn
+Contact
+Shumao Xu, Ph.D.
+Institute of Science and Technology for Brain-inspired Intelligence, Fudan University
+📩 shumaoxu@fudan.edu.cn
