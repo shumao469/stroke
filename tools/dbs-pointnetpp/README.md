@@ -146,16 +146,14 @@ If you use this code, please cite:
 ```bibtex
 @article{Xu2026high,
   title={PointNet++-based 3D point cloud deep learning for personalized deep brain stimulation efficacy prediction in Parkinson disease},
-  author={Yinghao Zhu and Ru Wang and Minyan Ge and Yuchun Wang and Zihao Liu and Gongyi Zhu and Shugeng Chen and Bo Shen and Yimin Sun and Fengtao Liu and Jue Zhao and Narasimha M. Beeraka and Virak Sorn and Haiyin Wang and Vladimir N. Nikolenko and Jianjun Wu and Shumao Xu},
+  author={Shumao Xu et al.},
   year={2026},
-  copyright={AAAS}
+  copyright={ }
 }
 ```
 
 ---
 
 ## Contact
-
-Shumao Xu, Ph.D.  
-Institute of Science and Technology for Brain-inspired Intelligence, Fudan University  
+Shumao Xu, Institute of Science and Technology for Brain-inspired Intelligence, Fudan University  
 📩 shumaoxu@fudan.edu.cn
