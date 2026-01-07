@@ -1,4 +1,4 @@
-# PointNet++ for Personalized Deep Brain Stimulation (DBS) Efficacy Prediction; you can see the developed sofeware via https://xsm-dbs-pointnet.streamlit.app/
+# PointNet++ for Personalized Deep Brain Stimulation (DBS) Efficacy Prediction; you can assess the developed sofeware via https://xsm-dbs-pointnet.streamlit.app/
 
 Official PyTorch implementation of a **PointNet++-based 3D point-cloud framework** for **personalized DBS efficacy prediction** in Parkinson’s disease (PD).
 
