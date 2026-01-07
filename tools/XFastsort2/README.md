@@ -1,4 +1,4 @@
-# XFastsort2
+# XFastsort2; you can access XFastsort2 via: https://xfastort2.streamlit.app/
 
 ![Mean waveforms](assets/mean_waveforms.png)
 ![SNR/ISI QC](assets/snr_isi_qc.png)
