@@ -4,3 +4,9 @@ scipy>=1.10
 scikit-image>=0.21
 opencv-python>=4.8
 matplotlib>=3.7
+streamlit
+pandas
+numpy
+plotly
+Pillow
+openpyxl
