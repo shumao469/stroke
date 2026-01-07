@@ -51,9 +51,12 @@ except ImportError:
 # 1. 信号处理核心算法
 # ==========================================
 
-def generate_demo_data(duration_sec=30, fs=20000):
+def generate_demo_data(duration_sec=10.0, fs=20000):
     """生成包含LFP、Spike和刺激伪迹的合成数据"""
-    t = np.linspace(0, duration_sec, int(fs*duration_sec))
+    # 确保 duration_sec 是浮点数并计算点数
+    n_samples = int(fs * duration_sec)
+    t = np.linspace(0, duration_sec, n_samples)
+    
     # 1. 背景 LFP (Theta + Gamma) - 模拟状态切换
     lfp = 0.5 * np.sin(2 * np.pi * 6 * t)  # Theta
     # 前半段 Gamma 低，后半段 Gamma 高
@@ -65,8 +68,13 @@ def generate_demo_data(duration_sec=30, fs=20000):
     
     # 3. Spikes (随机发放)
     spike_train = np.zeros_like(t)
-    n_spikes = int(duration_sec * 15) # 15Hz firing rate
-    spike_locs = np.random.choice(len(t)-100, n_spikes, replace=False)
+    # 根据时长调整 Spike 总数 (15Hz firing rate)
+    n_spikes = int(duration_sec * 15)
+    # 避免在最后边缘生成
+    if len(t) > 100:
+        spike_locs = np.random.choice(len(t)-100, n_spikes, replace=False)
+    else:
+        spike_locs = []
     
     # 两种不同的 Spike 波形
     wf1 = np.array([0, -0.5, -2, -4, -1, 1, 0.5, 0]) * 3.0
@@ -77,12 +85,15 @@ def generate_demo_data(duration_sec=30, fs=20000):
         if loc + len(wf) < len(t):
             spike_train[loc:loc+len(wf)] += wf
             
-    # 4. 刺激伪迹 (在中间几秒)
+    # 4. 刺激伪迹 (在中间段)
     stim = np.zeros_like(t)
+    # 设定刺激大概在 40%-60% 的时间段
     stim_start = int(len(t) * 0.4)
     stim_end = int(len(t) * 0.6)
-    # 50Hz 干扰
-    stim[stim_start:stim_end] = 30.0 * np.sin(2 * np.pi * 50 * t[stim_start:stim_end])
+    
+    if stim_end > stim_start:
+        # 50Hz 干扰
+        stim[stim_start:stim_end] = 30.0 * np.sin(2 * np.pi * 50 * t[stim_start:stim_end])
     
     x = lfp + noise + spike_train + stim
     return t, x
@@ -192,11 +203,14 @@ with st.sidebar:
     input_source = st.radio("Data Source", ["📂 Upload File", "🎲 Load Demo Data"])
     
     if input_source == "🎲 Load Demo Data":
+        # === 修改部分：增加 Duration 输入框 ===
+        demo_duration = st.number_input("Demo Duration (s)", min_value=1.0, max_value=120.0, value=10.0, step=1.0)
+        
         if st.button("Generate Demo Data"):
-            t, x = generate_demo_data(duration_sec=30, fs=20000)
+            t, x = generate_demo_data(duration_sec=demo_duration, fs=20000)
             st.session_state['data'] = {'t': t, 'x': x, 'fs': 20000.0}
             st.session_state['events'] = []
-            st.success("Demo Data Generated!")
+            st.success(f"Generated {demo_duration}s Demo Data!")
             st.rerun()
             
     else:
@@ -212,6 +226,7 @@ with st.sidebar:
                     t = df.iloc[:,0].astype(float).values
                     x = df.iloc[:,1].astype(float).values
                 
+                # Check consistency
                 if 't' not in st.session_state['data'] or len(t) != len(st.session_state['data']['t']):
                     fs_est = 1 / np.median(np.diff(t))
                     st.session_state['data'] = {'t': t, 'x': x, 'fs': fs_est}
@@ -219,9 +234,11 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Error: {e}")
 
+    # Display Current Signal Info
     if st.session_state['data']['x'] is not None:
         fs_display = st.session_state['data']['fs']
-        dur_display = st.session_state['data']['t'][-1]
+        # 使用实际数据的时长
+        dur_display = st.session_state['data']['t'][-1] if len(st.session_state['data']['t']) > 0 else 0
         st.info(f"Signal Info:\nFS: {fs_display:.0f} Hz\nDur: {dur_display:.1f} s")
 
 # ==========================================
@@ -244,6 +261,7 @@ if module == "1. Data & Preprocess":
     with col1:
         st.subheader("Raw Signal Trace")
         fig, ax = plt.subplots(figsize=(10, 3))
+        # 智能降采样以提高绘图性能
         ds = int(fs / 2000) if fs > 2000 else 1
         ax.plot(t[::ds], x[::ds], 'k', lw=0.5, alpha=0.9, label='Raw LFP')
         
@@ -549,5 +567,5 @@ elif module == "4. Dynamics (t-SNE/HMM)":
                         st.info("Install `umap-learn` to see UMAP plots.")
 
 # Footer
-st.sidebar.markdown("---")
+st.sidebar.markdown("© 2026 XFastsort XSM Lab")
 st.sidebar.markdown("© 2026 XFastsort XSM Lab")
