@@ -1,4 +1,5 @@
 # XFastsort2-Dynamics (HMM / PCA / t-SNE for TI spike & LFP features)
+LFP-spike sorting analyses via XFAstsort2.5: https://xfastsort2-5.streamlit.app/
 
 This repository provides a **reproducible analysis pipeline** for extracting low-dimensional structure and latent states
 from **LFP or spike-derived time-series features** (e.g., band power, PAC features, firing rate).
