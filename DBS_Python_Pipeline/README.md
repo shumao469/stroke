@@ -1,28 +1,26 @@
 AI-Enabled Personalization of DBS Pipeline
 
-This repository contains a Python implementation of the integrative computational pipeline for Deep Brain Stimulation (DBS) planning and visualization, as described in the paper:
-
-"AI-Enabled Personalization of DBS Through Multi-Modal Imaging Integration and Finite Element Field Prediction" > Zhu et al., IEEE Transactions on Neural Systems and Rehabilitation Engineering, 2025.
+This repository contains a Python implementation of the integrative computational pipeline for Deep Brain Stimulation (DBS) planning and visualization
 
 Overview
 
 Precise targeting in DBS is often complicated by postoperative brain shift and manual electrode localization errors. This tool provides an automated, Python-based workflow (compatible with WSL/Linux) that replaces traditional manual steps with AI-driven solutions.
 
-Key Features (Replicating Figures 1-3)
+Key Features
 
-Brain Shift Correction & Registration (Fig. 1 & 2)
+Brain Shift Correction & Registration
 
 Uses ANTsPy (Advanced Normalization Tools) for high-precision registration.
 
 Implements a pipeline to align Post-op CT with Pre-op MRI, including subcortical refinement to account for brain shift (pneumocephalus/CSF loss).
 
-AI-Automated Electrode Reconstruction (Fig. 1)
+AI-Automated Electrode Reconstruction
 
 PaCER-like Algorithm: Automates electrode localization using high-intensity voxel thresholding and Principal Component Analysis (PCA) for trajectory fitting.
 
 Achieves high precision without manual contact selection.
 
-Patient-Specific FEM Field Prediction (Fig. 3)
+Patient-Specific FEM Field Prediction
 
 Finite Element Modeling (FEM): Simulates the Volume of Tissue Activated (VTA) based on tissue conductivity.
 
@@ -64,4 +62,4 @@ data/: Directory for storing patient imaging data (optional).
 
 Reference
 
-If you use this code in your research, please refer to the original publication by Zhu et al. (2025).
+If you use this code in your research, please refer to the original publication.
