@@ -1,0 +1,7 @@
+All rights reserved.
+
+This codebase is provided for academic use within the ownership framework of:
+ISTBI, Fudan University, Xu Lab.
+
+For licensing, reuse, collaboration, redistribution, or commercial inquiry, please contact:
+shumaoxu@fudan.edu.cn

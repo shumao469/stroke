@@ -1,0 +1,9 @@
+Copyright (c) ISTBI, Fudan University, Xu Lab.
+All rights reserved.
+
+Repository contact:
+Shumao Xu
+shumaoxu@fudan.edu.cn
+
+This repository, including source code, documentation, figures, and derivative outputs,
+is owned by ISTBI, Fudan University, Xu Lab unless otherwise stated.
