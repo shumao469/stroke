@@ -1,50 +1,44 @@
-# ISTBI Behavior Decoder
+# Y-maze and open field decoding
 
-用于 **小鼠旷场（Open Field Test, OFT）** 与 **Y 迷宫（Y-maze）** 视频解码的 Python 项目。该仓库由上传 notebook 代码整理而成，已经重构为更适合 GitHub 上传、协作维护和后续扩展的目录结构。
+A Python project designed for decoding video data from Mouse Open Field Tests (OFT) and Y-maze experiments. This repository was organized and refactored from previously uploaded notebook code, adopting a directory structure better suited for GitHub hosting, collaborative maintenance, and future expansion.
 
-## 版权说明
+## Copyright Notice
 
-**Copyright (c) ISTBI, Fudan University, Xu Lab. All rights reserved.**  
-**Contact:** shumaoxu@fudan.edu.cn
+Copyright (c) ISTBI, Fudan University, Xu Lab. All rights reserved.
+Contact: shumaoxu@fudan.edu.cn
 
-本仓库中的代码、文档、图示和衍生输出默认归属于 **ISTBI, Fudan University, Xu Lab**。如需转载、复用、再分发或商业合作，请联系上方邮箱。
+The code, documentation, visualizations, and derived outputs within this repository are, by default, the intellectual property of ISTBI, Fudan University, Xu Lab. For inquiries regarding reproduction, reuse, redistribution, or commercial collaboration, please contact the email address provided above.
 
----
+## 1. Project Objectives
 
-## 1. 项目目标
+This project targets the following two types of behavioral videos:
 
-本项目面向以下两类行为学视频：
+1. Open Field Test (OFT)
+- Objective: To track the movement trajectory of a mouse within an open arena. 
+- Typical Outputs: Trajectory plots, heatmaps, velocity/zone timelines, total distance traveled, average velocity, time spent in the center zone, and number of entries into the center zone.
 
-1. **旷场实验（OFT）**
-   - 目标：追踪小鼠在开放区域中的运动轨迹。
-   - 典型输出：轨迹图、热图、速度/区域时间线、总距离、平均速度、中心区停留时间、中心进入次数。
+2. Y-maze Experiment
+- Objective: To track the mouse's exploratory behavior across the three arms and the central zone. 
+- Typical Outputs: Trajectory plots, heatmaps, velocity/zone timelines, time spent in each arm, number of entries into each arm, Spontaneous Alternation Rate (SAP), and arm entry sequence.
 
-2. **Y 迷宫实验（Y-maze）**
-   - 目标：追踪小鼠在 3 个臂和中心区中的探索过程。
-   - 典型输出：轨迹图、热图、速度/区域时间线、各臂停留时间、进入次数、自发交替率（SAP）、进臂顺序。
 
----
+## 2. Core Methodology
 
-## 2. 当前代码的核心思路
+This repository retains the most critical and robust technical pipeline derived from your original notebooks:
 
-本仓库保留了你 notebook 中最关键、最稳妥的一条技术路线：
+- Median Background Modeling: Uniformly samples frames from the video to generate a background image devoid of the mouse.
+- Manual Blue ROI Annotation: Avoids heavy reliance on brightness thresholds by allowing the user to directly mark the valid experimental area using blue annotations.
+- Background Subtraction + Morphological Cleaning: Extracts the mouse's silhouette from the foreground.
+- Centroid Tracking: Uses the centroid of the silhouette to determine the mouse's current position.
+- Trajectory Reconstruction: Plots the movement path as a red trajectory line, marking the start point with `S` and the end point with `E`. - Behavioral Quantification: Generates metrics such as distance traveled, velocity, dwell time within specific zones, and entry counts into those zones.
 
-- **中值背景建模**：从视频中均匀抽帧，生成无鼠的背景图。
-- **手动蓝色 ROI 标注**：不强依赖亮度，而是让用户直接用蓝色标出有效区域。
-- **背景差分 + 形态学清理**：从前景中提取小鼠轮廓。
-- **质心追踪**：以轮廓质心作为小鼠当前位置。
-- **轨迹重建**：绘制红色轨迹线，并标记起点 `S`、终点 `E`。
-- **行为量化**：输出距离、速度、分区停留时间、分区进入次数等指标。
+This protocol is particularly well-suited for the scenario you described earlier:
 
-这条路线特别适合你前面提到的情形：
+- The lower section of the video frame features a clearly delineated enclosure or maze structure.
+- It is not feasible to rely solely on variations in lighting intensity to identify the floor surface.
+- It places a strong emphasis on first precisely defining the experimental area, and then tracking the mouse exclusively within that designated region. ---
 
-- 视频底部是一个明确边界的方框或迷宫结构。
-- 不能单纯依赖光照明暗来识别底板。
-- 更强调 **先精确限定实验区域，再在区域内追踪小鼠**。
-
----
-
-## 3. 仓库结构
+## 3. Repository Structure
 
 ```text
 ISTBI_Behavior_Decoder/
@@ -57,325 +51,295 @@ ISTBI_Behavior_Decoder/
 ├─ docs/
 │  └─ OPERATION_GUIDE_CN.md
 ├─ notebooks/
-│  └─ 小鼠旷场和Y迷宫视频解码.ipynb
+│  └─ Mouse_Open_Field_and_Y-Maze_Video_Decoding.ipynb
 ├─ scripts/
 │  ├─ run_open_field.py
 │  └─ run_ymaze.py
 └─ src/
-   └─ istbi_behavior_decoder/
-      ├─ __init__.py
-      ├─ common.py
-      ├─ open_field.py
-      └─ ymaze.py
+└─ istbi_behavior_decoder/
+├─ __init__.py
+├─ common.py
+├─ open_field.py
+└─ ymaze.py
 ```
 
----
+## 4. Environment Setup (WSL Recommended)
 
-## 4. 环境配置（WSL 推荐）
-
-### 4.1 创建虚拟环境
+### 4.1 Create Virtual Environment
 
 ```bash
 cd /path/to/ISTBI_Behavior_Decoder
 python3 -m venv .venv
 source .venv/bin/activate
 ```
-
-### 4.2 安装依赖
+### 4.2 Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+## 5. Data Organization Suggestions
 
-## 5. 数据组织建议
-
-建议目录结构如下：
+The suggested directory structure is as follows:
 
 ```text
-/mnt/h/2024/VPL电生理/processed/Submit/1号鼠/
-├─ TI刺激前/
-│  ├─ 小鼠A_旷场.mp4
-│  ├─ 小鼠A_ROI_debug.jpg
-│  ├─ 小鼠A_Y迷宫.mp4
-│  └─ 小鼠A_YMaze_ROI_debug.jpg
-├─ TI刺激后1天/
-│  ├─ 小鼠B_旷场.mp4
-│  ├─ 小鼠B_ROI_debug.jpg
-│  ├─ 小鼠B_Y迷宫.mp4
-│  └─ 小鼠B_YMaze_ROI_debug.jpg
+/mnt/h/2024/VPL Electrophysiology/processed/Submit/Mouse 1/
+├─ Pre-TI Stimulation/
+│  ├─ Mouse A_Open Field.mp4
+│  ├─ Mouse A_ROI_debug.jpg
+│  ├─ Mouse A_Y-Maze.mp4
+│  └─ Mouse A_YMaze_ROI_debug.jpg
+├─ 1 Day Post-TI Stimulation/
+│  ├─ Mouse B_Open Field.mp4
+│  ├─ Mouse B_ROI_debug.jpg
+│  ├─ Mouse B_Y-Maze.mp4
+│  └─ Mouse B_YMaze_ROI_debug.jpg
 └─ ...
 ```
+### Key Naming Requirements
 
-### 关键命名要求
+#### Open Field
+- The video filename must contain: `Open Field`
+- ROI It is recommended to name the image: `VideoName_ROI_debug.jpg`
 
-#### 旷场
-- 视频文件名中应包含：`旷场`
-- ROI 图片建议命名为：`视频同名_ROI_debug.jpg`
+#### Y-Maze
+- The video filename should contain: `YMaze`
+- It is recommended to name the ROI image: `VideoName_YMaze_ROI_debug.jpg`
 
-例如：
-- `mouse01_旷场.mp4`
-- `mouse01_旷场_ROI_debug.jpg`
+## 6. Manual ROI Annotation Rules
 
-#### Y 迷宫
-- 视频文件名中应包含：`Y迷宫`
-- ROI 图片建议命名为：`视频同名_YMaze_ROI_debug.jpg`
+### 6.1 Why Manual Blue Annotation is Recommended
 
-例如：
-- `mouse01_Y迷宫.mp4`
-- `mouse01_Y迷宫_YMaze_ROI_debug.jpg`
+For your specific data, directly and automatically identifying the floor or maze boundaries may be affected by the following factors:
 
----
+- Reflections
+- Shadows
+- Uneven illumination at the edges
+- Brief intrusion of the experimenter's hands into the frame
+- Variations in the color of the apparatus floor
 
-## 6. ROI 手工标注规则
+Therefore, the current solution employs manual blue ROI annotation. Its advantages are:
 
-### 6.1 为什么推荐手工蓝色标注
+- High degree of controllability
+- Greater robustness in complex lighting conditions
+- Facilitates rapid manual correction
+- Aligns more closely with the philosophy of "first ensuring the valid analysis area, then performing tracking"
 
-对于你的数据，直接自动识别底板或迷宫边界可能受以下因素影响：
+### 6.2 Annotation Method
 
-- 反光
-- 阴影
-- 边缘不均匀照明
-- 实验者手部短暂进入画面
-- 装置底板颜色变化
+On the background image or any static frame:
 
-因此当前方案采用 **蓝色手工 ROI 标注**，优点是：
+- Use a drawing tool to paint the valid experimental area a distinct blue color.
+- Open Field: Paint the entire bottom activity area.
+- Y-Maze: Paint the entire Y-shaped activity area.
+- You only need to ensure that the blue area covers the valid region; there is no need to strive for artistically precise edges.
 
-- 可控性高
-- 对复杂光照更稳
-- 便于快速人工校正
-- 更接近“先保证有效分析区域，再做追踪”的思路
+The program will automatically extract the blue region (based on HSV values) to serve as a mask.
 
-### 6.2 标注方法
+## 7. Open Field Experiment Decoding Logic
 
-在背景图或任意静态帧上：
+### 7.1 Inputs
 
-- 用画图工具把 **有效实验区域** 涂成明显蓝色。
-- 旷场：涂整个底部活动区域。
-- Y 迷宫：涂整个 Y 形活动区域。
-- 只需保证蓝色区域覆盖有效区域，不必追求艺术化边缘。
+- `*.mp4` video file
+- Corresponding blue ROI image
 
-程序会自动提取 HSV 中的蓝色区域作为 mask。
+### 7.2 Processing Workflow
 
----
+1. Background Estimation
+Skip the first few seconds of the video, uniformly sample a number of frames, and calculate the median to generate a background image.
 
-## 7. 旷场实验解码逻辑
+2. ROI Extraction
+Extract the blue region from the `_ROI_debug.jpg` file to obtain the mask for the Open Field floor. 3. Definition of the Center Zone
+Within the bounding box of the ROI, a central rectangle is designated as the `Center` zone. The default setting is `center_ratio=0.5`, meaning the width and height of the center zone are each half the size of the overall ROI.
 
-### 7.1 输入
+4. Mouse Detection
+For each frame, the following operations are performed:
+- Background subtraction
+- Thresholding
+- Morphological opening
+- Contour area filtering
+- Centroid calculation
 
-- `*.mp4` 视频
-- 对应蓝色 ROI 图
+5. Trajectory Reconstruction
+Centroids are connected frame-by-frame to generate the trajectory line.
 
-### 7.2 处理流程
+6. Behavioral Quantification
+Outputs:
+- Total distance traveled
+- Average velocity
+- Time spent in the center zone
+- Time spent in the periphery zone
+- Number of entries into the center zone
+- Percentage of time spent in the center zone
 
-1. **背景估计**  
-   从视频中跳过前几秒，均匀抽取若干帧，取中值生成背景图。
+### 7.3 Output Files
 
-2. **ROI 提取**  
-   从 `_ROI_debug.jpg` 中提取蓝色区域，得到旷场底板 mask。
+Generated within the directory containing each video:
 
-3. **中心区定义**  
-   在 ROI 的外接矩形内，取中心矩形作为 `Center`。默认 `center_ratio=0.5`，即中心区宽高各为整体的一半。
+- `*_trajectory.jpg`: Red trajectory plot, marked with `S` (Start) and `E` (End)
+- `*_heatmap.jpg`: Heatmap
+- `*_session_summary.png`: Velocity and zone occupancy timeline
+- `*_Zone_Debug.jpg`: Visualization for verifying the ROI and center zone
 
-4. **小鼠检测**  
-   对每帧做：
-   - 背景差分
-   - 阈值分割
-   - 形态学开运算
-   - 轮廓面积筛选
-   - 质心计算
-
-5. **轨迹重建**  
-   按帧连接质心，生成轨迹线。
-
-6. **行为量化**  
-   输出：
-   - 总路程
-   - 平均速度
-   - 中心区停留时间
-   - 边缘区停留时间
-   - 中心区进入次数
-   - 中心区占比
-
-### 7.3 输出文件
-
-每个视频所在目录会生成：
-
-- `*_trajectory.jpg`：红色轨迹图，带 `S`/`E`
-- `*_heatmap.jpg`：热图
-- `*_session_summary.png`：速度 + 区域时间线
-- `*_Zone_Debug.jpg`：ROI 与中心区检查图
-
-根目录会生成：
+Generated in the root directory:
 
 - `OFT_Results.csv`
 - `OFT_Cohort_Summary.png`
 
 ---
 
-## 8. Y 迷宫解码逻辑
+## 8. Y-Maze Decoding Logic
 
-### 8.1 输入
+### 8.1 Inputs
 
-- `*.mp4` 视频
-- 对应蓝色 Y 迷宫 ROI 图
+- `*.mp4` video files
+- Corresponding blue Y-maze ROI images
 
-### 8.2 处理流程
+### 8.2 Processing Workflow
 
-1. **背景估计**  
-   同旷场，采用中值背景。
+1. Background Estimation
+Identical to the Open Field Test; a median background image is utilized.
 
-2. **Y 迷宫 ROI 提取**  
-   从 `_YMaze_ROI_debug.jpg` 中提取蓝色区域。
+2. Y-Maze ROI Extraction
+The blue-colored region is extracted from the `_YMaze_ROI_debug.jpg` image. 3. Automatic Partitioning
+Applied to the entire Y-maze mask:
+- Uses convexity defects to identify the central intersection region.
+- If insufficient convexity defects are detected, it falls back to estimating the center using a distance transform.
+- Divides the remaining area into three distinct arms based on connected components.
+- Sorts the arms into `Arm 1`, `Arm 2`, and `Arm 3` based on their relative angles to the center.
 
-3. **自动分区**  
-   在整个 Y 迷宫 mask 上：
-   - 使用凸包缺陷（convexity defects）寻找中心交汇区域
-   - 若凸包缺陷不足，则退化为距离变换圆形中心估计
-   - 将剩余区域按连通域拆成 3 个臂
-   - 按相对中心角度排序为 `Arm 1/2/3`
+4. Mouse Detection and Tracking
+Utilizes the following techniques:
+- Background subtraction
+- Thresholding
+- Contour filtering within the ROI
+- Centroid tracking
 
-4. **小鼠检测与追踪**  
-   同样使用：
-   - 背景差分
-   - 阈值分割
-   - ROI 内轮廓筛选
-   - 质心追踪
+5. Region Determination
+Based on the location of the centroid, determines whether the subject is currently situated in the `Center` or within one of the `Arms`. 6. Sequences and SAP Calculation
+Record the sequence of arm entries; for example:
 
-5. **区域判定**  
-   根据质心落点，判断当前位于 `Center` 或某个 `Arm`。
+```text
+Arm 1 > Arm 2 > Arm 3 > Arm 1 > Arm 3
+```
 
-6. **序列与 SAP 计算**  
-   记录进臂序列，例如：
+Define a "valid alternation" as a sequence of three consecutive, non-repeating arm entries, and calculate the Spontaneous Alternation Percentage (SAP) as follows:
 
-   ```text
-   Arm 1 > Arm 2 > Arm 3 > Arm 1 > Arm 3
-   ```
+```
+SAP = Number of Valid Alternations / (Total Number of Arm Entries - 2) × 100%
+```
 
-   以连续三个互不重复臂组成一次有效交替，计算自发交替率：
+### 8.3 Output Files
 
-   ```text
-   SAP = 有效交替次数 / (总进臂次数 - 2) × 100%
-   ```
+Generated within each video directory:
 
-### 8.3 输出文件
+- `*_trajectory.jpg`: Red trajectory plot, marked with `S` (Start) and `E` (End).
+- `*_heatmap.jpg`: Heatmap.
+- `*_session_summary.png`: Velocity + Zone Timeline.
+- `*_Zone_Debug.jpg`: Debug image verifying the automatic partitioning of the Center and the three arms.
 
-每个视频目录会生成：
-
-- `*_trajectory.jpg`：红色轨迹图，带 `S`/`E`
-- `*_heatmap.jpg`：热图
-- `*_session_summary.png`：速度 + 区域时间线
-- `*_Zone_Debug.jpg`：Center 与 3 个 arm 的自动分区检查图
-
-根目录会生成：
+Generated in the root directory:
 
 - `YMaze_Results.csv`
 - `YMaze_Cohort_Summary.png`
 
----
 
-## 9. 命令行运行方式
+## 9. Command-Line Execution
 
-### 9.1 运行旷场分析
-
-```bash
-python scripts/run_open_field.py \
-  --base-dir "/mnt/h/2024/VPL电生理/processed/Submit/1号鼠" \
-  --skip-seconds 5 \
-  --analyze-seconds 300
-```
-
-如果已经知道像素与厘米换算关系，可加入：
+### 9.1 Running Open Field Analysis
 
 ```bash
 python scripts/run_open_field.py \
-  --base-dir "/mnt/h/2024/VPL电生理/processed/Submit/1号鼠" \
-  --skip-seconds 5 \
-  --analyze-seconds 300 \
-  --pixel-to-cm 0.045
+--base-dir " \
+--skip-seconds 5 \
+--analyze-seconds 300
 ```
 
-### 9.2 运行 Y 迷宫分析
+If the pixel-to-centimeter conversion ratio is already known, you may include it:
+
+```bash
+python scripts/run_open_field.py \
+--base-dir " \
+--skip-seconds 5 \
+--analyze-seconds 300 \
+--pixel-to-cm 0.045
+```
+
+### 9.2 Running Y-Maze Analysis
 
 ```bash
 python scripts/run_ymaze.py \
-  --base-dir "/mnt/h/2024/VPL电生理/processed/Submit/1号鼠" \
-  --skip-seconds 5 \
-  --analyze-seconds 300
+--base-dir " \
+--skip-seconds 5 \
+--analyze-seconds 300
 ```
 
-同样可加入：
+Similarly, you may include:
 
 ```bash
 python scripts/run_ymaze.py \
-  --base-dir "/mnt/h/2024/VPL电生理/processed/Submit/1号鼠" \
-  --skip-seconds 5 \
-  --analyze-seconds 300 \
-  --pixel-to-cm 0.045
+--base-dir " \
+--skip-seconds 5 \
+--analyze-seconds 300 \
+--pixel-to-cm 0.045
 ```
 
----
+## 10. Suggestions for Interpreting Results
 
-## 10. 结果解释建议
+### Open Field
 
-### 旷场
+Common Interpretive Angles:
 
-常用解释方向：
+- Total Distance: General activity level
+- Mean Speed: Level of locomotion speed
+- Center Time / Center Ratio: One of the rough indicators of anxiety-like behavior
+- Center Entries: Willingness to explore the central zone
 
-- **Total Distance**：总体活动水平
-- **Mean Speed**：移动速度水平
-- **Center Time / Center Ratio**：焦虑样行为的粗略指标之一
-- **Center Entries**：对中心区探索意愿
+### Y-Maze
 
-### Y 迷宫
+Common Interpretive Angles:
 
-常用解释方向：
-
-- **SAP_percent**：空间工作记忆或自发交替表现
-- **Arm entries**：探索驱动力
-- **Center vs Arm time**：中心徘徊与臂探索平衡
-- **Arm sequence**：原始进臂顺序，便于人工复核
+- SAP_percent: Spatial working memory or Spontaneous Alternation Performance
+- Arm entries: Exploratory drive
+- Center vs Arm time: Balance between lingering in the center and exploring the arms
+- Arm sequence: The original arm entry sequence, provided to facilitate manual verification.
 
 ---
 
-## 11. 当前版本的边界与注意事项
+## 11. Limitations and Important Considerations for the Current Version
 
-1. **轨迹单位默认是像素**  
-   若没有提供 `--pixel-to-cm`，距离与速度单位默认是 px、px/s。
+1. Trajectory units default to pixels.
+If the `--pixel-to-cm` argument is not provided, distance and velocity units default to px and px/s, respectively.
 
-2. **依赖蓝色手工 ROI**  
-   这是当前版本最重要的稳健性来源。
+2. Relies on manually defined blue ROIs.
+This constitutes the most critical source of robustness in the current version.
 
-3. **遮挡严重时会用上一帧位置续接**  
-   这是为了避免短时检测失败导致轨迹断裂。
+3. Uses the position from the previous frame to bridge gaps during severe occlusion.
+This mechanism is designed to prevent trajectory fragmentation caused by transient detection failures.
 
-4. **Y 迷宫自动分区需人工检查**  
-   建议始终查看 `*_Zone_Debug.jpg`，确认 Center/Arm 1/2/3 分区合理。
+4. Automatic zone partitioning for the Y-maze requires manual verification.
+It is strongly recommended to always review the `*_Zone_Debug.jpg` file to ensure that the Center, Arm 1, Arm 2, and Arm 3 zones have been partitioned logically.
 
-5. **中心区定义是工程化定义**  
-   旷场中心区当前按 ROI 外接矩形的中心比例定义，如需与你实验室既定规范完全一致，可继续修改 `center_ratio` 或改成固定厘米尺寸。
+5. The definition of the Center Zone is an engineering-based approximation.
+In the Open Field test, the Center Zone is currently defined based on a proportional ratio relative to the bounding box of the ROI. If you require strict adherence to your laboratory's established protocols, you may further adjust the `center_ratio` parameter or switch to defining the zone using fixed dimensions in centimeters.
 
----
 
-## 12. 后续可扩展方向
+## 12. Potential Directions for Future Expansion
 
-后面还可以继续加：
+Future enhancements could include:
 
-- 批量视频 QC 报告
-- 更稳健的遮挡恢复
-- 鼠体朝向/头尾识别
-- 更正式的统计分析流程
-- 自动生成论文级图版
-- 将 ROI 标注改为交互式 GUI
-- 输出行为事件表（freezing / mobility bouts）
+- Batch video QC (Quality Control) reports
+- More robust occlusion recovery capabilities
+- Detection of body orientation (head/tail recognition)
+- A more formalized statistical analysis pipeline
+- Automatic generation of publication-quality figures
+- Transitioning ROI annotation to an interactive GUI
+- Outputting tables of behavioral events (e.g., freezing episodes, mobility bouts)
 
----
 
-## 13. 引用与署名建议
+## 13. Citation and Attribution Guidelines
 
-如果该仓库用于组内共享、论文补充材料、方法学说明或项目归档，建议保留如下署名：
+If this repository is utilized for internal group sharing, supplementary materials for publications, methodological documentation, or project archiving, it is recommended that the following attribution be retained:
 
-> ISTBI, Fudan University, Xu Lab.  
+> ISTBI, Fudan University, Xu Lab.
 > Contact: shumaoxu@fudan.edu.cn
-
