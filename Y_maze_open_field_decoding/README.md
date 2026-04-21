@@ -1,4 +1,4 @@
-# Y-maze and open field decoding https://xsm-y-maze.streamlit.app/
+# Y-maze and open field decoding https://xsm-ymaze.streamlit.app/
 
 A Python project designed for decoding video data from Mouse Open Field Tests (OFT) and Y-maze experiments. This repository was organized and refactored from previously uploaded notebook code, adopting a directory structure better suited for GitHub hosting, collaborative maintenance, and future expansion.
 
