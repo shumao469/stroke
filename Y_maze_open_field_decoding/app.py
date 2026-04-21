@@ -14,12 +14,12 @@ from scipy.ndimage import gaussian_filter
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-# Ò³ÃæÅäÖÃ
+# === é¡µé¢é…ç½® ===
 st.set_page_config(page_title="Y-Maze Tracker AI", layout="wide")
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib.font_manager")
 
 # ==========================================
-# ºËĞÄËã·¨Ä£¿é (´Ó y_maze_tracker.py ÒÆÖ²)
+# æ ¸å¿ƒç®—æ³•æ¨¡å— (Core Tracking & Zone Engine)
 # ==========================================
 
 def extract_background(video_path, frame_count=30):
@@ -132,7 +132,7 @@ def draw_vector_trajectory(x_coords, y_coords, blue_mask, bg_shape, base_name, o
     plt.scatter(x_coords[-1], y_coords[-1], color='#1E3A8A', s=80, zorder=3)
              
     plt.ylim(bg_shape[0], 0); plt.xlim(0, bg_shape[1]); plt.axis('off')
-    plt.savefig(os.path.join(output_dir, f"{base_name}_trajectory.jpg"), dpi=300, bbox_inches='tight', pad_inches=0.05)
+    plt.savefig(os.path.join(output_dir, f"{base_name}_trajectory_Shapes.jpg"), dpi=300, bbox_inches='tight', pad_inches=0.05)
     plt.close()
 
 def get_bouts(t_series, val_series):
@@ -182,11 +182,13 @@ def process_ymaze_video(video_path, blue_mask, zone_masks, output_dir, analyze_s
             valid_contours = [c for c in contours if 50 < cv2.contourArea(c) < 8000]
             if valid_contours:
                 M = cv2.moments(max(valid_contours, key=cv2.contourArea))
-                if M["m00"] != 0: cX, cY = int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"])
+                if M["m00"] != 0:
+                    cX, cY = int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"])
 
         dist = 0
         if cX is not None:
-            if last_center: dist = np.sqrt((cX - last_center[0])**2 + (cY - last_center[1])**2)
+            if last_center:
+                dist = np.sqrt((cX - last_center[0])**2 + (cY - last_center[1])**2)
             last_center = (cX, cY)
         elif last_center:
             cX, cY = last_center[0], last_center[1]
@@ -245,15 +247,35 @@ def plot_ymaze_session_charts(stats, base_name, output_dir):
     
     sns.set_theme(style="ticks", font_scale=1.1, font="sans-serif")
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    
     sns.barplot(x=zones, y=distances, ax=axes[0], color='#90CAF9', edgecolor='#1565C0', linewidth=1.5)
-    axes[0].set_title('Distance', fontweight='bold')
+    axes[0].set_title('Distance Traveled', fontweight='bold')
+    axes[0].set_ylabel('Distance (px)', fontweight='bold')
+    
     sns.barplot(x=zones, y=durations, ax=axes[1], color='#A5D6A7', edgecolor='#2E7D32', linewidth=1.5)
-    axes[1].set_title('Duration', fontweight='bold')
+    axes[1].set_title('Time Spent in Zones', fontweight='bold')
+    axes[1].set_ylabel('Duration (s)', fontweight='bold')
+    
     sns.barplot(x=zones, y=entries, ax=axes[2], color='#FFAB91', edgecolor='#D84315', linewidth=1.5)
-    axes[2].set_title('Entries', fontweight='bold')
+    axes[2].set_title('Number of Entries', fontweight='bold')
+    axes[2].set_ylabel('Entries (Count)', fontweight='bold')
+    
     for ax in axes: ax.set_xlabel(''); sns.despine(ax=ax)
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, f"{base_name}_DataCharts.png"), dpi=300)
+    plt.close()
+    
+    valid_durations, valid_labels, valid_colors = [], [], []
+    for d, l, c in zip(durations, zones, colors):
+        if d > 0:
+            valid_durations.append(d); valid_labels.append(l); valid_colors.append(c)
+
+    plt.figure(figsize=(6, 6))
+    if valid_durations:
+        plt.pie(valid_durations, labels=valid_labels, colors=valid_colors, autopct='%1.1f%%', startangle=140, 
+                wedgeprops={'edgecolor': 'white', 'linewidth': 1.5}, textprops={'fontweight': 'bold', 'fontsize': 12})
+    plt.title('Time Distribution by Zone', fontweight='bold', pad=20)
+    plt.savefig(os.path.join(output_dir, f"{base_name}_PieChart.png"), dpi=300)
     plt.close()
 
 def plot_spike_visualization(time_series, speed_series, zone_series, base_name, output_dir, fps):
@@ -274,37 +296,57 @@ def plot_spike_visualization(time_series, speed_series, zone_series, base_name, 
     
     axes[0].plot(time_series, smoothed_speed, color='#212121', linewidth=1.5)
     axes[0].fill_between(time_series, smoothed_speed, color='#BDBDBD', alpha=0.5)
-    axes[0].set_ylabel('Speed', fontweight='bold')
-    axes[0].set_title('Behavioral Events Visualization', fontweight='bold', pad=15)
+    axes[0].set_ylabel('Speed\n(px/s)', fontweight='bold')
+    axes[0].set_title('Behavioral Events & Kinematic Visualization', fontweight='bold', pad=15)
+    axes[0].grid(True, axis='y', linestyle='--', alpha=0.6)
     
-    zone_order, zone_colors = ['Center', 'Arm 1', 'Arm 2', 'Arm 3'], {'Center': '#FFB300', 'Arm 1': '#43A047', 'Arm 2': '#1E88E5', 'Arm 3': '#8E24AA'}
+    zone_order = ['Center', 'Arm 1', 'Arm 2', 'Arm 3']
+    zone_colors = {'Center': '#FFB300', 'Arm 1': '#43A047', 'Arm 2': '#1E88E5', 'Arm 3': '#8E24AA'}
     for i, z in enumerate(zone_order):
-        if z in zone_bouts: axes[1].broken_barh(zone_bouts[z], (i - 0.3, 0.6), facecolors=zone_colors[z], edgecolor='none')
-    axes[1].set_yticks(range(len(zone_order))); axes[1].set_yticklabels(zone_order); axes[1].set_ylabel('Zone', fontweight='bold')
+        if z in zone_bouts:
+            axes[1].broken_barh(zone_bouts[z], (i - 0.3, 0.6), facecolors=zone_colors[z], edgecolor='none')
+    axes[1].set_yticks(range(len(zone_order)))
+    axes[1].set_yticklabels(zone_order)
+    axes[1].set_ylabel('Zone Events', fontweight='bold')
+    axes[1].grid(True, axis='y', linestyle='--', alpha=0.3)
     
-    state_order, state_colors = ['Freezing', 'Immobility', 'Mobility'], {'Freezing': '#1E88E5', 'Immobility': '#FDD835', 'Mobility': '#E53935'}
+    state_order = ['Freezing', 'Immobility', 'Mobility']
+    state_colors = {'Freezing': '#1E88E5', 'Immobility': '#FDD835', 'Mobility': '#E53935'}
     for i, s in enumerate(state_order):
-        if s in state_bouts: axes[2].broken_barh(state_bouts[s], (i - 0.3, 0.6), facecolors=state_colors[s], edgecolor='none')
-    axes[2].set_yticks(range(len(state_order))); axes[2].set_yticklabels(state_order); axes[2].set_ylabel('State', fontweight='bold')
+        if s in state_bouts:
+            axes[2].broken_barh(state_bouts[s], (i - 0.3, 0.6), facecolors=state_colors[s], edgecolor='none')
+    axes[2].set_yticks(range(len(state_order)))
+    axes[2].set_yticklabels(state_order)
+    axes[2].set_ylabel('Motion State', fontweight='bold')
+    axes[2].set_xlabel('Time (s)', fontweight='bold')
+    axes[2].grid(True, axis='y', linestyle='--', alpha=0.3)
     
-    for ax in axes: sns.despine(ax=ax)
+    for ax in axes:
+        sns.despine(ax=ax)
+        ax.set_xlim(0, time_series[-1] if time_series else 300)
+        
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, f"{base_name}_Visualization.png"), dpi=300)
     plt.close()
     return state_bouts
 
-def smart_group_mapping(video_name):
-    v_name = str(video_name)
+# ==========================================
+# é«˜é˜¶æ•°æ®èšç±»åˆ†æä¸äºšç»„æ¨ªå‘æ¯”è¾ƒ (Cohort Analysis)
+# ==========================================
+
+def smart_group_mapping(group_name, video_name):
+    """ç²¾ç¡®æå–å¤§ç±» (Day) ä¸äºšç»„æ ‡å· (å¦‚ 01, 02)"""
+    group_name, video_name = str(group_name), str(video_name)
     day = 'Day 0'
-    if 'Ç°' in v_name or '¹âË¨' in v_name or 'Day 0' in v_name: day = 'Day 0'
-    elif '14' in v_name: day = 'Day 14'
-    elif '11' in v_name: day = 'Day 11'
-    elif '7' in v_name: day = 'Day 7'
-    elif '3' in v_name: day = 'Day 3'
-    elif '1' in v_name: day = 'Day 1'
+    if 'å‰' in group_name or 'å…‰æ “' in group_name or 'Day 0' in group_name: day = 'Day 0'
+    elif '14' in group_name: day = 'Day 14'
+    elif '11' in group_name: day = 'Day 11'
+    elif '7' in group_name: day = 'Day 7'
+    elif '3' in group_name: day = 'Day 3'
+    elif '1' in group_name: day = 'Day 1'
     
-    match = re.search(r'[-_](\d{1,2})', v_name)
-    if match: return f"{day}-{match.group(1).zfill(2)}"
+    match = re.search(r'[-_](\d{1,2})', video_name)
+    if match: return f"{day}-{match.group(1).zfill(2)}" 
     return day
 
 def calc_sap(arm_sequence):
@@ -329,7 +371,40 @@ def plot_advanced_cohort_analysis(results, output_dir):
     existing_order = sorted(df['Group'].unique())
     sns.set_theme(style="ticks", font_scale=1.1, font="sans-serif")
 
-    # Radar Chart
+    # === å›¾1ï¼šäºšç»„ç²¾ç»†å¯¹æ¯” (Speed & SAP) ===
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    sns.barplot(x="Group", y="SAP", data=df, order=existing_order, color='#EF9A9A', edgecolor='#D32F2F', ax=axes[0])
+    axes[0].set_title('Spontaneous Alternation (SAP) per Subgroup', fontweight='bold')
+    axes[0].set_ylabel('SAP (%)', fontweight='bold')
+    
+    sns.barplot(x="Group", y="Mean_Speed", data=df, order=existing_order, color='#90CAF9', edgecolor='#1976D2', ax=axes[1])
+    axes[1].set_title('Average Speed per Subgroup', fontweight='bold')
+    axes[1].set_ylabel('Speed (px/s)', fontweight='bold')
+    
+    for ax in axes: ax.set_xlabel(''); sns.despine(ax=ax)
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "Cohort_Subgroup_Speed_SAP.png"), dpi=300)
+    plt.close()
+
+    # === å›¾2ï¼šäºšç»„åŒºåŸŸæ¢ç´¢å›¾ (Stacked Zone Profile) ===
+    zone_records = []
+    for r in results:
+        for z_name, duration in r['Zone_Stats'].items():
+            zone_records.append({'Subgroup': r['Group'], 'Zone': z_name, 'Duration': duration})
+    df_zones = pd.DataFrame(zone_records)
+    if not df_zones.empty:
+        plt.figure(figsize=(10, 6))
+        sns.barplot(x="Subgroup", y="Duration", hue="Zone", data=df_zones, order=existing_order, 
+                    palette={'Center': '#FFD54F', 'Arm 1': '#81C784', 'Arm 2': '#64B5F6', 'Arm 3': '#BA68C8'})
+        plt.title('Time Spent in Zones (Center vs Arms)', fontweight='bold')
+        plt.ylabel('Duration (s)', fontweight='bold')
+        plt.xlabel('')
+        sns.despine()
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, "Cohort_Subgroup_Zone_Profile.png"), dpi=300)
+        plt.close()
+
+    # === å›¾3ï¼šé›·è¾¾èšç±»ç”»åƒ (Behavioral Fingerprint Radar Chart) ===
     categories = ['SAP (%)', 'Speed', 'Center Time', 'Total Distance']
     scaler = MinMaxScaler()
     radar_data = df[['SAP', 'Mean_Speed', 'Center_Time', 'Total_Distance']].fillna(0)
@@ -339,10 +414,13 @@ def plot_advanced_cohort_analysis(results, output_dir):
         ax = plt.subplot(111, polar=True)
         angles = [n / float(len(categories)) * 2 * pi for n in range(len(categories))]
         angles += angles[:1]
-        ax.set_theta_offset(pi / 2); ax.set_theta_direction(-1)
+        ax.set_theta_offset(pi / 2)
+        ax.set_theta_direction(-1)
         plt.xticks(angles[:-1], categories, size=12, fontweight='bold')
-        ax.set_rlabel_position(0); plt.yticks([0.25, 0.5, 0.75, 1.0], ["25", "50", "75", "100"], color="grey", size=10)
+        ax.set_rlabel_position(0)
+        plt.yticks([0.25, 0.5, 0.75, 1.0], ["25", "50", "75", "100"], color="grey", size=10)
         plt.ylim(0, 1)
+
         colors = sns.color_palette("Set1", len(existing_order))
         for i, group in enumerate(existing_order):
             group_idx = df[df['Group'] == group].index
@@ -351,13 +429,37 @@ def plot_advanced_cohort_analysis(results, output_dir):
                 values += values[:1]
                 ax.plot(angles, values, linewidth=2, linestyle='solid', label=group, color=colors[i])
                 ax.fill(angles, values, color=colors[i], alpha=0.1)
+
         plt.title('Behavioral Fingerprint (Radar Chart)', size=15, fontweight='bold', pad=30)
         plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "Cohort_Radar_Clustering.png"), dpi=300)
         plt.close()
 
-    # PCA Clustering
+    # === å›¾4ï¼šå¾®è§‚é˜µå‘çŠ¶æ€åˆ†å¸ƒ (Violin Plots by DayGroup) ===
+    bout_records = []
+    for r in results:
+        for state, bouts in r['State_Bouts'].items():
+            for start_time, duration in bouts:
+                bout_records.append({'Group': r['DayGroup'], 'State': state, 'Duration': duration})
+    df_bouts = pd.DataFrame(bout_records)
+    if not df_bouts.empty:
+        day_order = sorted(df_bouts['Group'].unique())
+        plt.figure(figsize=(10, 6))
+        df_bouts_filtered = df_bouts[df_bouts['Duration'] > 0.5]
+        sns.violinplot(x="Group", y="Duration", hue="State", data=df_bouts_filtered, 
+                       order=day_order, palette={'Freezing': '#90CAF9', 'Immobility': '#FFE082', 'Mobility': '#EF9A9A'}, 
+                       split=False, inner="quartile")
+        plt.title('Bout Duration Distribution Clustering (by Day)', fontweight='bold')
+        plt.ylabel('Duration per Event (s)', fontweight='bold')
+        plt.xlabel('')
+        plt.xticks(rotation=45)
+        sns.despine()
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_dir, "Cohort_Bout_Duration_Violin.png"), dpi=300)
+        plt.close()
+
+    # === å›¾5ï¼šä¸»æˆåˆ†é™ç»´ (PCA Clustering) ===
     pca_data = []
     for r in results:
         features = {'Group': r['Group'], 'DayGroup': r['DayGroup'], 'Total_Distance': r['Total_Distance'], 'SAP': r['SAP']}
@@ -388,51 +490,65 @@ def plot_advanced_cohort_analysis(results, output_dir):
         plt.savefig(os.path.join(output_dir, "Cohort_PCA_Clustering.png"), dpi=300)
         plt.close()
 
+    # === å›¾6ï¼šç‹¬ç«‹é©¬å°”å¯å¤«è½¬ç§»çŸ©é˜µ (Individual Markov Heatmaps) ===
+    n_groups = len(existing_order)
+    fig, axes = plt.subplots(1, n_groups, figsize=(5 * n_groups, 4))
+    if n_groups == 1: axes = [axes] 
+    
+    for ax, group in zip(axes, existing_order):
+        group_matrices = [r['Transition_Matrix'] for r in results if r['Group'] == group]
+        if group_matrices:
+            avg_matrix = np.mean(group_matrices, axis=0)
+            sns.heatmap(avg_matrix, annot=True, fmt=".2f", cmap="Blues", vmin=0, vmax=1, ax=ax, cbar=False,
+                        xticklabels=['Arm 1', 'Arm 2', 'Arm 3'], yticklabels=['Arm 1', 'Arm 2', 'Arm 3'])
+            ax.set_title(f'{group} Arm Transitions', fontweight='bold')
+            ax.set_ylabel('From Arm', fontweight='bold')
+            ax.set_xlabel('To Arm', fontweight='bold')
+            
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "Cohort_Subgroup_Markov_Heatmaps.png"), dpi=300)
+    plt.close()
+
 # ==========================================
-# Streamlit Web UI Ç°¶ËÂß¼­
+# Streamlit Web UI å‰ç«¯é€»è¾‘
 # ==========================================
 
-st.title("?? Y-Maze Behavioral Tracker & Cohort Analysis")
-st.markdown("×Ô¶¯ÌáÈ¡ Y ÃÔ¹¬ÔË¶¯¹ì¼£¡¢ÈÈÍ¼¡¢×Ô·¢½»ÌæÂÊ (SAP)¡¢Spikes ĞĞÎª¹âÆ×£¬²¢Ö´ĞĞ¶àÎ¬¶È PCA ÓëÀ×´ï¾ÛÀà¡£")
+st.title("ğŸ Y-Maze Behavioral Tracker & Cohort Analysis")
+st.markdown("è‡ªåŠ¨æå– Y è¿·å®«è¿åŠ¨è½¨è¿¹ã€çƒ­å›¾ã€è‡ªå‘äº¤æ›¿ç‡ (SAP)ã€Spikes è¡Œä¸ºå…‰è°±ï¼Œå¹¶æ‰§è¡Œå¤šç»´åº¦ PCA ä¸é›·è¾¾èšç±»ã€‚")
 
-st.sidebar.header("?? Data Upload (ÉÏ´«Êı¾İ)")
-st.sidebar.info("ÇëÉÏ´«Ô­ÊÓÆµ (.mp4) ÓëÄãÊÖÍ¿µÄÀ¶É«ÃÉ°æÍ¼ (_ROI_debug.jpg)¡£ÏµÍ³»áÍ¨¹ıÃû×Ö×Ô¶¯½«ÊÓÆµÓëÕÚÕÖÆ¥Åä¡£")
+st.sidebar.header("ğŸ“ Data Upload (ä¸Šä¼ æ•°æ®)")
+st.sidebar.info("è¯·ä¸Šä¼ åŸè§†é¢‘ (.mp4) ä¸ä½ æ‰‹æ¶‚çš„è“è‰²è’™ç‰ˆå›¾ (_ROI_debug.jpg)ã€‚ç³»ç»Ÿä¼šé€šè¿‡åå­—è‡ªåŠ¨åŒ¹é…ã€‚")
 
-video_files = st.sidebar.file_uploader("ÉÏ´«ÊÓÆµÎÄ¼ş", type=['mp4', 'avi'], accept_multiple_files=True)
-mask_files = st.sidebar.file_uploader("ÉÏ´«À¶É«ÑÚÂëÍ¼", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
+video_files = st.sidebar.file_uploader("ä¸Šä¼ è§†é¢‘æ–‡ä»¶", type=['mp4', 'avi'], accept_multiple_files=True)
+mask_files = st.sidebar.file_uploader("ä¸Šä¼ è“è‰²æ©ç å›¾", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True)
 
-analyze_secs = st.sidebar.number_input("½ØÈ¡·ÖÎöÊ±³¤ (Ãë, 0´ú±í·ÖÎöÈ«³¤)", min_value=0, value=300, step=10)
+analyze_secs = st.sidebar.number_input("æˆªå–åˆ†ææ—¶é•¿ (ç§’, 0ä»£è¡¨åˆ†æå…¨é•¿)", min_value=0, value=300, step=10)
 analyze_secs = analyze_secs if analyze_secs > 0 else None
 
-if st.sidebar.button("?? ÔËĞĞ¸ß¼¶½âÂëÓë¾ÛÀà", type="primary"):
+if st.sidebar.button("ğŸš€ è¿è¡Œé«˜çº§è§£ç ä¸èšç±»", type="primary"):
     if not video_files or not mask_files:
-        st.warning("ÇëÍ¬Ê±ÉÏ´«ÖÁÉÙÒ»¸öÊÓÆµºÍ¶ÔÓ¦µÄÀ¶É«ÑÚÂëÍ¼Æ¬£¡")
+        st.warning("è¯·åŒæ—¶ä¸Šä¼ è‡³å°‘ä¸€ä¸ªè§†é¢‘å’Œå¯¹åº”çš„è“è‰²æ©ç å›¾ç‰‡ï¼")
     else:
-        # ´´½¨ÁÙÊ±¹¤×÷Ä¿Â¼
         temp_dir = tempfile.mkdtemp()
         all_results = []
-        
         progress_bar = st.progress(0)
         
         for i, video_file in enumerate(video_files):
             base_name = video_file.name.rsplit('.', 1)[0]
-            st.subheader(f"ÕıÔÚ´¦Àí: {base_name}")
+            st.subheader(f"æ­£åœ¨å¤„ç†: {base_name}")
             
-            # Ñ°ÕÒÆ¥ÅäµÄ Mask
             matched_mask = next((m for m in mask_files if base_name in m.name), None)
             if not matched_mask:
-                st.error(f"Î´ÕÒµ½Óë {base_name} Æ¥ÅäµÄÑÚÂëÍ¼£¬Ìø¹ı...")
+                st.error(f"æœªæ‰¾åˆ°ä¸ {base_name} åŒ¹é…çš„æ©ç å›¾ï¼Œè·³è¿‡...")
                 continue
                 
-            # ±£´æµ½ÁÙÊ±Ä¿Â¼
             v_path = os.path.join(temp_dir, video_file.name)
             with open(v_path, "wb") as f: f.write(video_file.getbuffer())
             
             m_path = os.path.join(temp_dir, matched_mask.name)
             with open(m_path, "wb") as f: f.write(matched_mask.getbuffer())
             
-            # ÔËĞĞÒıÇæ
-            with st.spinner('ÕıÔÚ½øĞĞ¿¹¾â³İ·Ö¸î¡¢¹ì¼£ÌáÈ¡ÓëÊÂ¼şÉú³É...'):
+            with st.spinner('æ­£åœ¨è¿›è¡ŒæŠ—é”¯é½¿åˆ†å‰²ã€è½¨è¿¹æå–ä¸äº‹ä»¶ç”Ÿæˆ...'):
                 bg_img = extract_background(v_path, frame_count=5)
                 blue_mask = extract_raw_blue_mask(m_path, bg_img.shape)
                 
@@ -444,11 +560,13 @@ if st.sidebar.button("?? ÔËĞĞ¸ß¼¶½âÂëÓë¾ÛÀà", type="primary"):
                     total_time = sum([s['duration'] for s in stats.values()])
                     sap_score = calc_sap(arm_sequence)
                     trans_matrix = calc_transition_matrix(arm_sequence)
-                    subgroup_name = smart_group_mapping(base_name)
+                    
+                    subgroup_name = smart_group_mapping(group_name="Upload", video_name=base_name)
+                    day_group = subgroup_name.split('-')[0] if '-' in subgroup_name else subgroup_name
                     
                     all_results.append({
                         'Group': subgroup_name,
-                        'DayGroup': subgroup_name.split('-')[0] if '-' in subgroup_name else subgroup_name,
+                        'DayGroup': day_group,
                         'Video': base_name,
                         'Total_Distance': total_dist,
                         'Mean_Speed': total_dist / total_time if total_time > 0 else 0,
@@ -459,7 +577,6 @@ if st.sidebar.button("?? ÔËĞĞ¸ß¼¶½âÂëÓë¾ÛÀà", type="primary"):
                         'Transition_Matrix': trans_matrix
                     })
                     
-                    # äÖÈ¾µ±Ç°´¦ÀíµÄ½á¹ûÍ¼Æ¬
                     col1, col2, col3 = st.columns(3)
                     with col1: st.image(os.path.join(temp_dir, f"{base_name}_trajectory_Shapes.jpg"), caption="Vector Trajectory")
                     with col2: st.image(os.path.join(temp_dir, f"{base_name}_heatmap.jpg"), caption="Heatmap")
@@ -467,29 +584,34 @@ if st.sidebar.button("?? ÔËĞĞ¸ß¼¶½âÂëÓë¾ÛÀà", type="primary"):
                     
                     st.image(os.path.join(temp_dir, f"{base_name}_Visualization.png"), caption="Spike Event Visualization", use_container_width=True)
                 else:
-                    st.error("À¶É«ÑÚÂëÍ¼¶ÁÈ¡Ê§°Ü¡£")
+                    st.error("è“è‰²æ©ç å›¾è¯»å–å¤±è´¥ã€‚")
             
             progress_bar.progress((i + 1) / len(video_files))
             
-        # ËùÓĞÊÓÆµ´¦ÀíÍê±Ï£¬½øĞĞ¸ß½× Cohort ·ÖÎö
         if all_results:
-            st.success("È«²¿ÊÓÆµ½âÂëÍê³É£¡¿ªÊ¼Éú³É¸ß½×ÌØÕ÷¾ÛÀàÍ¼±í...")
+            st.success("å…¨éƒ¨è§†é¢‘è§£ç å®Œæˆï¼å¼€å§‹ç”Ÿæˆé«˜é˜¶ç‰¹å¾èšç±»å›¾è¡¨...")
             plot_advanced_cohort_analysis(all_results, temp_dir)
             
-            # Õ¹Ê¾¸ß¼¶Í¼±í
-            st.markdown("### ?? Advanced Cohort & Subgroup Analysis")
+            st.markdown("### ğŸ“Š Advanced Cohort & Subgroup Analysis")
             cohort_cols = st.columns(2)
             if os.path.exists(os.path.join(temp_dir, "Cohort_Radar_Clustering.png")):
                 with cohort_cols[0]: st.image(os.path.join(temp_dir, "Cohort_Radar_Clustering.png"), caption="Behavioral Radar Fingerprint")
             if os.path.exists(os.path.join(temp_dir, "Cohort_PCA_Clustering.png")):
                 with cohort_cols[1]: st.image(os.path.join(temp_dir, "Cohort_PCA_Clustering.png"), caption="PCA Trajectory Clustering")
             
-            # µ¼³ö CSV
+            if os.path.exists(os.path.join(temp_dir, "Cohort_Subgroup_Speed_SAP.png")):
+                st.image(os.path.join(temp_dir, "Cohort_Subgroup_Speed_SAP.png"), caption="Speed & SAP Analysis")
+            if os.path.exists(os.path.join(temp_dir, "Cohort_Subgroup_Zone_Profile.png")):
+                st.image(os.path.join(temp_dir, "Cohort_Subgroup_Zone_Profile.png"), caption="Zone Preference Profile")
+            if os.path.exists(os.path.join(temp_dir, "Cohort_Bout_Duration_Violin.png")):
+                st.image(os.path.join(temp_dir, "Cohort_Bout_Duration_Violin.png"), caption="Bout Duration Distribution")
+            if os.path.exists(os.path.join(temp_dir, "Cohort_Subgroup_Markov_Heatmaps.png")):
+                st.image(os.path.join(temp_dir, "Cohort_Subgroup_Markov_Heatmaps.png"), caption="Markov Transition Matrices")
+
             csv_path = os.path.join(temp_dir, "YMaze_Results.csv")
             df_export = pd.DataFrame(all_results).drop(columns=['Zone_Stats', 'Transition_Matrix', 'State_Bouts'])
             df_export.to_csv(csv_path, index=False, encoding='utf-8-sig')
             
-            # ´ò°üËùÓĞÎÄ¼şÎª ZIP
             zip_path = os.path.join(temp_dir, "YMaze_Analysis_Outputs.zip")
             with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
                 for root, _, files in os.walk(temp_dir):
@@ -497,10 +619,9 @@ if st.sidebar.button("?? ÔËĞĞ¸ß¼¶½âÂëÓë¾ÛÀà", type="primary"):
                         if file.endswith(('.jpg', '.png', '.csv')) and file != "YMaze_Analysis_Outputs.zip":
                             zipf.write(os.path.join(root, file), file)
                             
-            # Ìá¹©ÏÂÔØ°´Å¥
             with open(zip_path, "rb") as fp:
                 st.download_button(
-                    label="?? Ò»¼üÏÂÔØËùÓĞÊı¾İºÍÍ¼±í (ZIP)",
+                    label="ğŸ“¥ ä¸€é”®ä¸‹è½½æ‰€æœ‰æ•°æ®å’Œå›¾è¡¨ (ZIP)",
                     data=fp,
                     file_name="YMaze_Analysis_Outputs.zip",
                     mime="application/zip",
