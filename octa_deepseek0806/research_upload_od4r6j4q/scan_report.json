@@ -1,0 +1,144 @@
+{
+  "package_name": "research_upload_od4r6j4q.zip",
+  "archive_size": 964766,
+  "file_count": 1276,
+  "directory_count": 0,
+  "compressed_size": 708508,
+  "uncompressed_size": 10869859,
+  "compression_ratio": 15.342,
+  "top_level_items": [
+    "ALL_SCHEMAS.csv",
+    "COMMON_COLUMNS.csv",
+    "MASTER_MANIFEST.json",
+    "README_FOR_GPT.md",
+    "SHA256SUMS.txt",
+    "TABLE_INDEX.csv",
+    "UPLOAD_ORDER_CN.md",
+    "VOLUME_MANIFEST.json",
+    "tables"
+  ],
+  "extension_counts": {
+    ".csv": 637,
+    ".json": 319,
+    ".sql": 317,
+    ".md": 2,
+    ".txt": 1
+  },
+  "largest_files": [
+    {
+      "path": "tables/matplotlib_fontlist_v3/preview.csv",
+      "size": 885255
+    },
+    {
+      "path": "ALL_SCHEMAS.csv",
+      "size": 176635
+    },
+    {
+      "path": "SHA256SUMS.txt",
+      "size": 164954
+    },
+    {
+      "path": "tables/fusion_oof_v3_resolved_tensor_manifest/preview.csv",
+      "size": 151763
+    },
+    {
+      "path": "tables/tensor_index_v3_qc/preview.csv",
+      "size": 146884
+    },
+    {
+      "path": "MASTER_MANIFEST.json",
+      "size": 123038
+    },
+    {
+      "path": "COMMON_COLUMNS.csv",
+      "size": 112559
+    },
+    {
+      "path": "VOLUME_MANIFEST.json",
+      "size": 89796
+    },
+    {
+      "path": "tables/tensor_index_v3/preview.csv",
+      "size": 82936
+    },
+    {
+      "path": "tables/output_filter_event_1_t_3hao_24h__l_2025_11_1_16_31/preview.csv",
+      "size": 64655
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_12h_r_l_2025_10_28_21_5/preview.csv",
+      "size": 61188
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_r_l_2025_10_28_21_24/preview.csv",
+      "size": 60886
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_12h_r_l_2025_10_28_22_3/preview.csv",
+      "size": 60802
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_12h_r_l_2025_10_28_22_0/preview.csv",
+      "size": 60768
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_r_l_2025_10_28_21_32/preview.csv",
+      "size": 60689
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_r_l_2025_10_28_21_25/preview.csv",
+      "size": 60664
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_l_l_2025_10_28_21_29/preview.csv",
+      "size": 60607
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_r_l_2025_10_28_21_31/preview.csv",
+      "size": 60560
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_12h_r_l_2025_10_28_22_9/preview.csv",
+      "size": 60560
+    },
+    {
+      "path": "tables/output_filter_event_1_stroke_3h_r_l_2025_10_28_21_37/preview.csv",
+      "size": 60442
+    }
+  ],
+  "files_over_50_mib": [],
+  "files_over_100_mib": [],
+  "suspicious_paths": [],
+  "duplicate_paths": [],
+  "encrypted_files": [],
+  "secret_findings": [],
+  "sensitive_data_hints": [],
+  "model_artifacts": [],
+  "entrypoints": [],
+  "model_loader_hints": [],
+  "detected_imports": [],
+  "critical_files_present": {
+    "README.md": false,
+    ".gitignore": false,
+    "requirements.txt": false,
+    "pyproject.toml": false,
+    "environment.yml": false,
+    "Dockerfile": false,
+    "LICENSE": false,
+    "CITATION.cff": false,
+    "SECURITY.md": false
+  },
+  "research_upload_studio_hints": [
+    "Manifest or inventory file detected",
+    "Validation output detected",
+    "Schema metadata detected",
+    "SQL file detected"
+  ],
+  "warnings": [],
+  "errors": [],
+  "sha256": "121767d2d59d8218589db05f748e0ab0e27e06111bb4e8f7f2ebb7a3e0fc7b90",
+  "repository": "shumao469/stroke",
+  "release_tag": null,
+  "generated_at": "2026-08-06T05:09:29.105001+00:00",
+  "repository_folder": "octa_deepseek0806/research_upload_od4r6j4q"
+}
