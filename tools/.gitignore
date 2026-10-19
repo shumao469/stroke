@@ -1,0 +1,7 @@
+# ---- dbs-pointnetpp generated outputs ----
+tools/dbs-pointnetpp/processed_pcd/
+tools/dbs-pointnetpp/leaddbs_output/
+tools/dbs-pointnetpp/mock_dbs_data/
+tools/dbs-pointnetpp/runs/
+tools/dbs-pointnetpp/outputs/
+tools/dbs-pointnetpp/*.npz

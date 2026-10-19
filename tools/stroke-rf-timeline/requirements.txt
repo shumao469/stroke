@@ -1,0 +1,8 @@
+numpy>=1.23
+pandas>=1.4
+scikit-learn>=1.0
+scipy>=1.8
+joblib>=1.2
+matplotlib>=3.7
+Pillow>=10.0
+imageio>=2.31
