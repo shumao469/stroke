@@ -1,7 +1,11 @@
-# NEFEL Biofeature Extraction; you can open this software via https://nefel-biofeatures.streamlit.app/
+# NEFEL Biofeature Extraction
+you can open this software via https://nefel-biofeatures.streamlit.app/
 
 A lightweight toolkit for extracting quantitative biomarkers from
 histology / immunofluorescence (IF) / immunohistochemistry (IHC) images.
+
+<img width="1842" height="675" alt="image" src="https://github.com/user-attachments/assets/3123f750-e87d-4cc9-a326-aba4a945425b" />
+
 ---
 ## What you get
 
