@@ -1,0 +1,15 @@
+{
+  "build_tools": {
+    "setuptools": "84.1.0",
+    "wheel": "0.48.0"
+  },
+  "core_dependencies": "Python standard library only",
+  "optional_rendering": {
+    "charset-normalizer": "3.5.2",
+    "pillow": "12.3.0",
+    "pypdfium2": "5.14.0",
+    "reportlab": "4.4.9"
+  },
+  "python": "3.12.14",
+  "test_runner": "unittest from Python standard library"
+}

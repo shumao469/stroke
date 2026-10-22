@@ -1,0 +1,41 @@
+{
+  "assumptions": [
+    "zero-mean Gaussian residual relative timing error",
+    "timing shifts independent of the underlying phasor",
+    "coherent averaging of repeated complex observations"
+  ],
+  "budget_ms_at_20_hz": 3.6529529417339237,
+  "budget_ms_at_40_hz": 1.8264764708669619,
+  "equation": "H = abs(E[exp(i*2*pi*f*epsilon_delta)]) = exp(-(2*pi*f*sigma_delta)^2/2)",
+  "retention_criterion": 0.9,
+  "scope": "Analytical illustration; no participant data, physiological estimate or empirical model performance",
+  "software_version": "0.1.0",
+  "units": {
+    "displayed_standard_deviation": "ms",
+    "equation_standard_deviation": "s",
+    "frequency": "Hz"
+  },
+  "validation": {
+    "absolute_tolerance": 1e-14,
+    "analytical_budget_ms_by_frequency_hz": {
+      "20": 3.6529529417339237,
+      "40": 1.8264764708669619
+    },
+    "budget_substitution_pass": true,
+    "evidence_scope": "Reproduction of an analytical illustration; no participant data or empirical model test",
+    "frequency_grid_hz": {
+      "start": 1,
+      "step": 1,
+      "stop": 40
+    },
+    "jitter_grid_ms": {
+      "start": 0,
+      "step": 1,
+      "stop": 20
+    },
+    "maximum_absolute_difference": 0.0,
+    "reference_cells": 840,
+    "reference_grid_pass": true,
+    "retention_criterion": 0.9
+  }
+}

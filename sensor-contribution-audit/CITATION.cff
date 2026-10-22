@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Please cite this software using the author, title, version and repository URL. An archival DOI can be added after one is assigned."
+type: software
+title: "Sensor contribution audit: analytical timing-budget illustrations"
+version: "0.1.0"
+date-released: 2026-10-22
+authors:
+  - family-names: "Xu"
+    given-names: "Shumao"
+repository-code: "https://github.com/shumao469/stroke"
+url: "https://github.com/shumao469/stroke/tree/main/sensor-contribution-audit"
+abstract: "Portable, deterministic calculations of coherent-amplitude retention under Gaussian relative timing error, with an analytical heatmap, timing-budget contour and explicit feature-dimension checks."
+keywords:
+  - multimodal sensing
+  - timing calibration
+  - analytical illustration
+  - coherent averaging
+# DOI: pending an author-approved archival deposit; no DOI has been assigned.
+# Code licence selection remains with the repository owner.

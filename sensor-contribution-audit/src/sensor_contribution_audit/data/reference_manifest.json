@@ -1,0 +1,12 @@
+{
+  "file": "figure1a_reference.csv",
+  "sha256": "acfc2fe1894219497f698c320f28aa6c6abdaeba2a03bdc43aab4c16dfe47bfb",
+  "rows": 840,
+  "evidence_type": "equation-derived analytical illustration",
+  "reference_date": "2026-10-22",
+  "participant_measurements": false,
+  "frequency_hz": [1, 40],
+  "relative_jitter_sd_ms": [0, 20],
+  "coordinate_step": 1,
+  "formula": "exp(-0.5*(2*pi*f*sigma_ms/1000)^2)"
+}

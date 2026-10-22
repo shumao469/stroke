@@ -1,0 +1,22 @@
+{
+  "added_feature_dimension": 8,
+  "affine_intercept_parameter_count": 1,
+  "affine_total_parameter_count": 21,
+  "coefficient_dimensions": {
+    "w_x": 12,
+    "w_z": 8
+  },
+  "combined_feature_dimension": 20,
+  "encoder_fusion_input": {
+    "added_latent_dimension": 4,
+    "declared_concatenated_readout_input_dimension": 14,
+    "encoder_and_fusion_parameter_count": null,
+    "existing_latent_dimension": 6,
+    "observed_availability_dimension": 2,
+    "observed_quality_dimension": 2,
+    "parameter_count_scope": "Architecture-dependent; inferred neither from feature dimension nor from input count"
+  },
+  "existing_feature_dimension": 12,
+  "scope": "Declared feature dimensions and an affine scalar score only",
+  "score_dimension": 1
+}
