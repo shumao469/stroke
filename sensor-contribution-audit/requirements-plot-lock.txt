@@ -1,6 +1,0 @@
-# Optional rendering environment tested with CPython 3.12.14.
-# The analytical core and SVG writer use only the Python standard library.
-reportlab==4.4.9
-pypdfium2==5.14.0
-pillow==12.3.0
-charset-normalizer==3.5.2

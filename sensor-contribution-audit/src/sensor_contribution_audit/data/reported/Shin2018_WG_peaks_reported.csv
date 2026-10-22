@@ -1,4 +1,0 @@
-source_id,modality,task,reported_peak_accuracy_percent,peak_window_right_end_s,window_start_s,window_width_s,window_step_s,n_participants,cv_unit,cv_repeats,cv_folds,same_latency_comparison,source_locator,doi
-Shin2018,EEG,word_generation_versus_baseline,76.9,10,5,5,1,26,within_subject_trials,10,5,false,Dataset_C_WG_hybrid_and_Figure_7,10.1038/sdata.2018.3
-Shin2018,NIRS_HbO_and_HbR,word_generation_versus_baseline,74.3,14,9,5,1,26,within_subject_trials,10,5,false,Dataset_C_WG_hybrid_and_Figure_7,10.1038/sdata.2018.3
-Shin2018,hybrid_EEG_NIRS,word_generation_versus_baseline,80.7,11,6,5,1,26,within_subject_trials,10,5,false,Dataset_C_WG_hybrid_and_Figure_7,10.1038/sdata.2018.3
