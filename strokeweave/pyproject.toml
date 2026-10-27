@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "strokeweave"
+version = "0.1.0"
+description = "Auditable research-workflow prototype with synthetic-only execution"
+requires-python = ">=3.10"
+authors = [{name = "Shumao Xu"}]
+readme = "README.md"
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+strokeweave = "strokeweave.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+strokeweave = ["web/*"]

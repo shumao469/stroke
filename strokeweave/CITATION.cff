@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Please cite the research software by its version and repository URL. No archival DOI has been assigned."
+type: software
+title: "StrokeWeave: an auditable stroke-research workflow prototype"
+version: "0.1.0"
+date-released: 2026-10-27
+authors:
+  - family-names: "Xu"
+    given-names: "Shumao"
+repository-code: "https://github.com/shumao469/stroke"
+abstract: "Synthetic-only portable workflow and verified-computing research code. No autonomous clinical capability or superiority claim."

@@ -1,0 +1,35 @@
+{
+  "id": "STROKEWEAVE-ENGINEERING-V1-20261027",
+  "scope": "New generated-input implementation verification, not patient evaluation or a new NIST confirmatory test",
+  "locked_before_execution": true,
+  "historical_evaluation": "All old nine NIST tasks remain exposed, unchanged and excluded from tuning and new performance claims",
+  "historical_threshold": {"TACTIC_to_direct_complete_wall_target": 0.8, "observed": 0.983445494, "met": false},
+  "numerics": {
+    "coefficient_and_rss_relative_tolerance": "1/100000000",
+    "neumann_terms": 3,
+    "exact_arithmetic": "Python Fraction and fraction-free integer elimination",
+    "soundness_checks": "Independent analytic solutions and independently implemented rational oracle; singular, finite, dimensions and input binding",
+    "false_rejection_checks": "New anisotropic hand-defined cases, not old NIST tasks; no universal improvement claim",
+    "shared_improvements": ["direct deterministic", "strong simple gate", "strong VOI", "TACTIC"]
+  },
+  "solver_cost_check": {
+    "parameter_sizes": [4, 8, 12, 16],
+    "rows": "4*p+3",
+    "input": "Fixed integer modular design with an identity block; exact rational response; no data files",
+    "repetitions": 5,
+    "order": "Alternating Fraction-reference then Bareiss, then reverse on successive repetitions",
+    "record": ["statistics_seconds", "solve_seconds", "exact_residual_check_seconds", "total_warm_seconds", "rank", "exact_solution_equal"],
+    "interpretation": "Common-kernel warm engineering timings, not TACTIC/direct speedup, no exclusive CPU assurance, no independent biological samples",
+    "stop": "On algebraic mismatch or invalid bound, stop; no algorithm/threshold re-selection using results"
+  },
+  "application": {
+    "input_mode": "generated-only",
+    "patient_execution": false,
+    "training_enabled": false,
+    "sealed_labels": ["CAL", "HOLD", "test"],
+    "checks": ["bounded retry", "idempotence", "persisted state", "tamper rejection", "input contracts", "batch submission", "English interface", "JSON/HTML/archive output", "local HTTP safety"]
+  },
+  "release_gate": "All implementation tests and independent automatic code review pass; sanitized allowlist manifest; preserve negative findings; functional gate is not performance or clinical validation",
+  "publication_boundary": "No claim of NC readiness, new visual-model architecture, first-ever certificate method, or controller superiority",
+  "publishing": "Only clean synthetic research-code subtree on a new shumao469/stroke branch; do not modify main, copy old runtime, restricted datasets, credentials or weights"
+}

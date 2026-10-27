@@ -1,0 +1,53 @@
+test_checkout_demo_and_idempotent_repeat (test_entrypoint.EntrypointTests.test_checkout_demo_and_idempotent_repeat) ... ok
+test_checkout_info_is_explicit (test_entrypoint.EntrypointTests.test_checkout_info_is_explicit) ... ok
+test_lazy_import_does_not_require_scientific_stack (test_entrypoint.EntrypointTests.test_lazy_import_does_not_require_scientific_stack) ... ok
+test_anisotropic_fixture_reduces_conservative_refusal_without_relaxing_tolerance (test_numerics.ComponentwiseCertificateTests.test_anisotropic_fixture_reduces_conservative_refusal_without_relaxing_tolerance) ... ok
+test_bad_candidate_inputs_fail_closed (test_numerics.ComponentwiseCertificateTests.test_bad_candidate_inputs_fail_closed) ... ok
+test_componentwise_bound_encloses_and_tightens (test_numerics.ComponentwiseCertificateTests.test_componentwise_bound_encloses_and_tightens) ... ok
+test_dense_bound_with_independent_two_by_two_oracle (test_numerics.ComponentwiseCertificateTests.test_dense_bound_with_independent_two_by_two_oracle) ... ok
+test_identity_preconditioner_exact_error_bound (test_numerics.ComponentwiseCertificateTests.test_identity_preconditioner_exact_error_bound) ... ok
+test_inaccurate_coefficients_are_rejected (test_numerics.ComponentwiseCertificateTests.test_inaccurate_coefficients_are_rejected) ... ok
+test_missing_inverse_and_noncontraction_rejected (test_numerics.ComponentwiseCertificateTests.test_missing_inverse_and_noncontraction_rejected) ... ok
+test_wrong_rss_is_not_hidden_by_good_coefficients (test_numerics.ComponentwiseCertificateTests.test_wrong_rss_is_not_hidden_by_good_coefficients) ... ok
+test_bad_inputs_fail_explicitly (test_numerics.ExactSystemTests.test_bad_inputs_fail_explicitly) ... ok
+test_bareiss_and_reference_fresh_systems (test_numerics.ExactSystemTests.test_bareiss_and_reference_fresh_systems) ... ok
+test_exact_fit_independent_stationarity (test_numerics.ExactSystemTests.test_exact_fit_independent_stationarity) ... ok
+test_fixed_choices (test_numerics.ExactSystemTests.test_fixed_choices) ... ok
+test_linear_dimension_errors (test_numerics.ExactSystemTests.test_linear_dimension_errors) ... ok
+test_problem_integrity_and_derived_stats (test_numerics.ExactSystemTests.test_problem_integrity_and_derived_stats) ... ok
+test_singular_systems_rejected (test_numerics.ExactSystemTests.test_singular_systems_rejected) ... ok
+test_symmetric_gram_and_source_binding (test_numerics.ExactSystemTests.test_symmetric_gram_and_source_binding) ... ok
+test_bareiss_all_small_two_by_two_nonsingular_inputs (test_numerics_independent.IndependentNumericsChecks.test_bareiss_all_small_two_by_two_nonsingular_inputs) ... ok
+test_bareiss_row_denominators_and_later_pivot_swap (test_numerics_independent.IndependentNumericsChecks.test_bareiss_row_denominators_and_later_pivot_swap) ... ok
+test_componentwise_bounds_cover_true_errors_without_solver_access (test_numerics_independent.IndependentNumericsChecks.test_componentwise_bounds_cover_true_errors_without_solver_access) ... ok
+test_deliberately_inaccurate_candidates_cannot_be_accepted (test_numerics_independent.IndependentNumericsChecks.test_deliberately_inaccurate_candidates_cannot_be_accepted) ... ok
+test_exact_least_squares_matches_original_space_cramer_oracle (test_numerics_independent.IndependentNumericsChecks.test_exact_least_squares_matches_original_space_cramer_oracle) ... ok
+test_no_contraction_or_rank_cannot_be_certified (test_numerics_independent.IndependentNumericsChecks.test_no_contraction_or_rank_cannot_be_certified) ... ok
+test_nondiagonal_signed_contraction_bound_with_independent_oracle (test_numerics_independent.IndependentNumericsChecks.test_nondiagonal_signed_contraction_bound_with_independent_oracle) ... ok
+test_bad_shutdown_timeouts_are_rejected (test_shutdown.ShutdownOwnershipTests.test_bad_shutdown_timeouts_are_rejected) ... ok
+test_closed_store_cannot_reopen_database_or_submit (test_shutdown.ShutdownOwnershipTests.test_closed_store_cannot_reopen_database_or_submit) ... ok
+test_shutdown_timeout_retains_owner_until_worker_has_stopped (test_shutdown.ShutdownOwnershipTests.test_shutdown_timeout_retains_owner_until_worker_has_stopped) ... ok
+test_costs_recorded_on_success_and_failed_worker_paths (test_snapshot.EvidenceSnapshotTests.test_costs_recorded_on_success_and_failed_worker_paths) ... ok
+test_invalidated_report_includes_its_new_audit_event (test_snapshot.EvidenceSnapshotTests.test_invalidated_report_includes_its_new_audit_event) ... ok
+test_zip_reports_use_one_snapshot_even_if_queue_can_change (test_snapshot.EvidenceSnapshotTests.test_zip_reports_use_one_snapshot_even_if_queue_can_change) ... ok
+test_cross_origin_and_host_rejected (test_workflow.HTTPTests.test_cross_origin_and_host_rejected) ... ok
+test_health_static_and_batch_api (test_workflow.HTTPTests.test_health_static_and_batch_api) ... ok
+test_traversal_and_patient_inputs_rejected (test_workflow.HTTPTests.test_traversal_and_patient_inputs_rejected) ... ok
+test_batch_and_audit_chain (test_workflow.WorkflowTests.test_batch_and_audit_chain) ... ok
+test_bounded_recovery_charges_failure (test_workflow.WorkflowTests.test_bounded_recovery_charges_failure) ... ok
+test_idempotency_and_conflict (test_workflow.WorkflowTests.test_idempotency_and_conflict) ... ok
+test_journal_tamper_fails_closed (test_workflow.WorkflowTests.test_journal_tamper_fails_closed) ... ok
+test_measurement_is_analytic_and_correct (test_workflow.WorkflowTests.test_measurement_is_analytic_and_correct) ... ok
+test_no_paths_or_arbitrary_recipe (test_workflow.WorkflowTests.test_no_paths_or_arbitrary_recipe) ... ok
+test_persistent_failure_stops (test_workflow.WorkflowTests.test_persistent_failure_stops) ... ok
+test_probability_and_unit_rejected (test_workflow.WorkflowTests.test_probability_and_unit_rejected) ... ok
+test_restart_preserves_charged_attempts (test_workflow.WorkflowTests.test_restart_preserves_charged_attempts) ... ok
+test_result_tamper_refers_and_preserves (test_workflow.WorkflowTests.test_result_tamper_refers_and_preserves) ... ok
+test_rule_router_boundaries (test_workflow.WorkflowTests.test_rule_router_boundaries) ... ok
+test_runtime_owner_cannot_be_stolen (test_workflow.WorkflowTests.test_runtime_owner_cannot_be_stolen) ... ok
+test_zip_whitelist_and_html (test_workflow.WorkflowTests.test_zip_whitelist_and_html) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 6.427s
+
+OK
